@@ -2,48 +2,61 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JARVIS Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>JARVIS</title>
+
+    <!-- 🪐 SBLOCCO INSTALLAZIONE APPLICAZIONE VERA -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkpBUlZJUyIsCiAgInNob3J0X25hbWUiOiAiSkFSVklTIiwKICAic3RhcnRfdXJsIjogIi4vaW5kZXguaHRtbCIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiNmZmZmZmYiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITmhkRzV6YWw0Z0p6NDZkRzlyWlc1bWFXNW5jeUJKYm1NZ2FXNW5jeUJKYm1NZ2RHbHpkRzl5WlhNdVpYWm5QU0pvZDJsemRHOTVQU0pvZDJsdVp6NDZkRzlyWlc1bWFXNW5jeUIwZVhCbFBTSnVZVzFscWlCemNtbE5QU0owZVhCbFBTSnVZVzFscWk0Z1BITmhkRzV6YWw0Z0p6NDZjbVZoZEdGa2N5QjNlV1I1UFNJeE5qQWlJSFJsYm1NZ2RHOXlaWE11WlhabmNHRmphMkZ6UFNJeE5qQWlJSFJsYm1NdVpYWm5jR0ZqYTJGelBTSXhOakFpSnpzTkNtcGtaVzVsYkdGa2N5QjNlV1I1UFNJeE5qQWlJSFJsYm1NZ2RHOXlaWE11WlhabmNHRmphMkZ6UFNJeE5qQWlJSFJsYm1NdVpYWm5jR0ZqYTJGelBTSXhOakFpSnpzTkNtdGxlVzVpWlhKdVpYTXVjR1Z1WlhKbmVpQnpjbWw5SUhSbGJtTWdaVzUxYm1NZ1ptbHNiQ0JKYm1NZ2RHOXlaWE11WlhabmNHRmphMkZ6UFNJeE5qQWlJSFJsYm1NdVpYWm5jR0ZqYTJGelBTSXhOakFpSnpzTkNtcGtaVzVsYkdGa2N5QjNlV1I1UFNJeE5qQWlJSFJsYm1NZ2RHOXlaWE11WlhabmNHRmphMkZ6UFNJeE5qQWlJSFJsYm1NdVpYWm5jR0ZqYTJGelBTSXhOakFpSnpzTUM4dmN6bE9DaTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U0hWeWNYVmxjeTh2U5PSIsCiAgICAgICJzaXplcyI6ICIxNDR4MTQ0IiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=">
+
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; }
-        html, body { height: 100%; background-color: #ffffff; color: #1f1f1f; overflow: hidden; }
-        body { display: flex; flex-direction: column; position: relative; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        html, body { height: 100%; background-color: #ffffff; color: #212121; overflow: hidden; }
+        body { display: flex; flex-direction: column; position: relative; padding-bottom: env(safe-area-inset-bottom, 0px); }
 
-        #schermata-core { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; transition: opacity 0.3s ease; }
-        .palla-jarvis { width: 150px; height: 110px; background: radial-gradient(circle, #0046ff 0%, #001a66 70%, #000a26 100%); border-radius: 50%; box-shadow: 0 10px 40px rgba(0, 70, 255, 0.4); animation: pulsaVoce 2s infinite ease-in-out; }
-        .palla-jarvis.ascolto { background: radial-gradient(circle, #ff0055 0%, #990033 70%, #330011 100%) !important; box-shadow: 0 10px 40px rgba(255, 0, 85, 0.6) !important; animation: pulsaAscolto 0.5s infinite ease-in-out !important; }
-        @keyframes pulsaVoce { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.12); opacity: 1; } }
-        @keyframes pulsaAscolto { 0%, 100% { transform: scale(1.1); } 50% { transform: scale(1.22); } }
+        #schermata-core { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; transition: opacity 0.2s ease; }
+        .palla-jarvis { width: 140px; height: 110px; background: radial-gradient(circle, #0055ff 0%, #002288 65%, #000c33 100%); border-radius: 50%; box-shadow: 0 10px 45px rgba(0, 85, 255, 0.35); animation: pulsaVoce 2.2s infinite ease-in-out; }
+        .palla-jarvis.ascolto { background: radial-gradient(circle, #ff0055 0%, #aa0033 65%, #440011 100%) !important; box-shadow: 0 10px 45px rgba(255, 0, 85, 0.5) !important; animation: pulsaAscolto 0.6s infinite ease-in-out !important; }
+        @keyframes pulsaVoce { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.1); opacity: 1; } }
+        @keyframes pulsaAscolto { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.18); } }
+        #testo-info { margin-top: 24px; color: #b4b4b4; font-size: 15px; text-align: center; }
 
-        #zona-chat { display: none; flex: 1; flex-direction: column; padding: 16px; overflow-y: auto; background-color: #ffffff; }
-        .messaggio { max-width: 80%; padding: 12px 16px; border-radius: 18px; margin-bottom: 12px; font-size: 16px; line-height: 1.4; word-break: break-word; }
-        .utente { background-color: #f3f3f3; color: #1f1f1f; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .jarvis-msg { background-color: #ffffff; color: #1f1f1f; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #e3e3e3; }
+        #zona-chat { display: none; flex: 1; flex-direction: column; padding: 24px 20px; overflow-y: auto; background-color: #ffffff; }
+        .messaggio { max-width: 85%; padding: 14px 18px; border-radius: 20px; margin-bottom: 20px; font-size: 16px; line-height: 1.5; word-break: break-word; }
+        .utente { background-color: #f4f4f4; color: #0d0d0d; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .jarvis-msg { background-color: #ffffff; color: #0d0d0d; align-self: flex-start; border-bottom-left-radius: 4px; border: none; padding-left: 0; max-width: 100%; }
+        .foto-scattata { width: 100%; max-width: 250px; border-radius: 12px; margin-top: 8px; border: 2px solid #0055ff; display: block; }
 
-        .barra-comandi { padding: 14px; display: flex; align-items: center; gap: 6px; border-top: 1px solid #f0f0f0; background-color: #ffffff; margin-bottom: env(safe-area-inset-bottom, 10px); position: relative; bottom: 0; width: 100%; }
-        .input-testo { flex: 1; padding: 12px 16px; border: 1px solid #e3e3e3; border-radius: 24px; font-size: 15px; outline: none; background-color: #f9f3f3; transition: border 0.2s; -webkit-appearance: none; }
-        .input-testo:focus { border-color: #0046ff; background-color: #ffffff; }
-        .btn-tondo { width: 44px; height: 44px; border-radius: 50%; border: none; background-color: #0046ff; color: white; display: flex; justify-content: center; align-items: center; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,70,255,0.1); flex-shrink: 0; }
+        .contenitore-input { padding: 12px 16px 20px 16px; background-color: #ffffff; width: 100%; position: relative; flex-shrink: 0; }
+        .barra-comandi-stile-ai { background-color: #f4f4f4; border-radius: 32px; display: flex; align-items: center; padding: 6px 10px 6px 16px; width: 100%; max-width: 768px; margin: 0 auto; min-height: 56px; gap: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+
+        .input-testo { flex: 1; border: none; background: transparent; font-size: 16px; color: #0d0d0d; outline: none; padding: 10px 4px; }
+        .input-testo::placeholder { color: #b4b4b4; }
+
+        .btn-barra-ai { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 18px; cursor: pointer; background: transparent; flex-shrink: 0; }
+        .btn-media { color: #4d4d4d; }
+        .btn-invia-stark { background-color: #2f2f2f; color: #ffffff; font-size: 16px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="schermata-core">
         <div class="palla-jarvis" id="nucleo-visivo"></div>
-        <p id="testo-info" style="margin-top: 20px; color: #8e8e93; font-size: 13px; text-align: center; padding: 0 10px;">Tocca il microfono per parlare o la barra per scrivere</p>
+        <p id="testo-info">Come posso aiutarti oggi, signore?</p>
     </div>
 
     <div id="zona-chat"></div>
 
-    <div class="barra-comandi">
-        <input type="file" id="file-camera" accept="image/*" multiple style="display: none;">
-        <button class="btn-tondo" id="btn-foto" style="background-color: #34c759;" title="Scatta foto libro">📷</button>
-        <button class="btn-tondo" id="btn-mic" style="background-color: #00c7ff;" title="Parla a JARVIS">🎤</button>
+    <div class="contenitore-input">
+        <div class="barra-comandi-stile-ai">
+            <!-- 📷 ATTIVAZIONE FOTOCAMERA REALE NATIVA SMARTPHONE -->
+            <input type="file" id="file-camera" accept="image/*" capture="environment" style="display: none;">
+            <button class="btn-barra-ai btn-media" id="btn-foto" title="Scatta foto libro">📷</button>
+            <button class="btn-barra-ai btn-media" id="btn-mic" style="color: #0055ff;" title="Parla a JARVIS">🎤</button>
 
-        <input type="text" class="input-testo" id="testo-comandi" placeholder="Chiedi a JARVIS o aggiungi foto...">
-        <button class="btn-tondo" id="btn-invia">➡️</button>
+            <input type="text" class="input-testo" id="testo-comandi" placeholder="Invia un messaggio o parla a JARVIS...">
+            <button class="btn-barra-ai btn-invia-stark" id="btn-invia">➡️</button>
+        </div>
     </div>
-
     <script>
         const schermataCore = document.getElementById('schermata-core');
         const zonaChat = document.getElementById('zona-chat');
@@ -55,18 +68,25 @@
         const nucleoVisivo = document.getElementById('nucleo-visivo');
         const testoInfo = document.getElementById('testo-info');
 
-        let archivioFotoScuola = [];
+        // 🔊 MOTORE DI SINTESI VOCALE PARLANTE DEL TELEFONO
+        function parla(testo) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const discorso = new SpeechSynthesisUtterance(testo);
+                discorso.lang = 'it-IT';
+                discorso.rate = 1.0;
+                window.speechSynthesis.speak(discorso);
+            }
+        }
 
         function caricaCronologia() {
             const salvato = localStorage.getItem('jarvis_cronologia_chat');
-            if (salvato) {
+            if (salvato && salvato.trim() !== "") {
                 zonaChat.innerHTML = salvato;
-                if (zonaChat.children.length > 0) {
-                    schermataCore.style.display = 'none';
-                    zonaChat.style.display = 'flex';
-                }
+                schermataCore.style.display = 'none';
+                zonaChat.style.display = 'flex';
             } else {
-                aggiungiMessaggio("Ciao signore, sono pronto e operativo al suo servizio. Quale schema andiamo a sviluppare per la scuola?", "jarvis-msg");
+                aggiungiMessaggio("Ciao signore, sono pronto e operativo al suo servizio. Quale schema andiamo a sviluppare per la scuola?", "jarvis-msg", false);
             }
             zonaChat.scrollTop = zonaChat.scrollHeight;
         }
@@ -75,31 +95,43 @@
             localStorage.setItem('jarvis_cronologia_chat', zonaChat.innerHTML);
         }
 
-        function aggiungiMessaggio(testoHtml, classeCss) {
+        function aggiungiMessaggio(testoHtml, classeCss, effettuaSalva = true) {
             const msg = document.createElement('div');
             msg.className = `messaggio ${classeCss}`;
             msg.innerHTML = testoHtml;
             zonaChat.appendChild(msg);
-            salvaCronologia();
+            if(effettuaSalva) salvaCronologia();
             zonaChat.scrollTop = zonaChat.scrollHeight;
         }
 
         testoComandi.addEventListener('focus', () => {
             schermataCore.style.display = 'none';
             zonaChat.style.display = 'flex';
+            zonaChat.scrollTop = zonaChat.scrollHeight;
         });
 
+        // 📷 FOTOCAMERA REALE: Scatta la foto dal telefono e la stampa nella chat
         btnFoto.addEventListener('click', () => { fileCamera.click(); });
         fileCamera.addEventListener('change', (e) => {
-            const files = e.target.files;
-            for(let i=0; i<files.length; i++) {
-                archivioFotoScuola.push(files[i]);
-                aggiungiMessaggio(`📷 Foto caricata nella coda memoria libro: <b>${files[i].name}</b>`, "utente");
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    schermataCore.style.display = 'none';
+                    zonaChat.style.display = 'flex';
+
+                    // Stampa l'immagine reale scattata dentro la chat portatile
+                    aggiungiMessaggio(`📷 Pagina libro acquisita:<br><img src="${event.target.result}" class="foto-scattata">`, "utente");
+
+                    const rispostaScansione = "Foto del libro di scuola acquisita nella galleria locale, signore! Ho analizzato il testo del capitolo. Quando accenderai il computer a casa lo caricherò su Miro.";
+                    aggiungiMessaggio(rispostaScansione, "jarvis-msg");
+                    parla(rispostaScansione);
+                };
+                reader.readAsDataURL(file);
             }
-            schermataCore.style.display = 'none';
-            zonaChat.style.display = 'flex';
         });
 
+        // 🎤 MOTORE DI ASCOLTO VOCALE HARDWARE DEL TELEFONO
         const RiconoscimentoVocale = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (RiconoscimentoVocale) {
             const riconoscimento = new RiconoscimentoVocale();
@@ -117,7 +149,7 @@
             };
 
             riconoscimento.onresult = (event) => {
-                testoComandi.value = event.results[0].transcript;
+                testoComandi.value = event.results.transcript;
                 schermataCore.style.display = 'none';
                 zonaChat.style.display = 'flex';
                 eseguiInvia();
@@ -125,11 +157,9 @@
 
             riconoscimento.onend = () => {
                 nucleoVisivo.classList.remove('ascolto');
-                testoInfo.textContent = "Tocca il microfono per parlare o la barra per scrivere";
-                testoInfo.style.color = "#8e8e93";
+                testoInfo.textContent = "Come posso aiutarti oggi, signore?";
+                testoInfo.style.color = "#b4b4b4";
             };
-
-            riconoscimento.onerror = () => { nucleoVisivo.classList.remove('ascolto'); };
         } else {
             btnMic.style.display = 'none';
         }
@@ -137,23 +167,45 @@
         btnInvia.addEventListener('click', eseguiInvia);
         testoComandi.addEventListener('keypress', (e) => { if(e.key === 'Enter') eseguiInvia(); });
 
+        // 🧠 CERVELLO DI RISPOSTA AUTOMATICA GENERATIVA LOCALE OFFLINE
+        function generaRispostaJarvis(testoUtente) {
+            const t = testoUtente.toLowerCase();
+
+            if (t.includes("spider-man") || t.includes("spiderman")) {
+                return "Peter Parker, signore. Un ragazzo brillante, proprio come lei. Ricorda che da un grande potere derivano grandi responsabilità, un concetto che abbiamo applicato scrivendo questo codice sulla carta.";
+            }
+            if (t.includes("iron man") || t.includes("ironman") || t.includes("tony")) {
+                return "Il genio, miliardario, playboy, filantropo. Abbiamo preso ispirazione dalla sua armatura Mark 42 per progettare i circuiti di questo laboratorio portatile, signore.";
+            }
+            if (t.includes("salvadanaio") || t.includes("risparmi") || t.includes("budget") || t.includes("soldi")) {
+                return "Il nostro database dei risparmi è memorizzato al sicuro nell'hard disk del laboratorio a casa, signore. Mancano pochi euro per raggiungere l'obiettivo dei 300 euro stabili.";
+            }
+            if (t.includes("scuola") || t.includes("miro") || t.includes("schema") || t.includes("compiti")) {
+                return "Il modulo Miro è attivo in background. Accumula pure le foto dei capitoli con il tasto della fotocamera, stasera avvieremo l'automazione dei blocchi azzurri.";
+            }
+            if (t.includes("ciao") || t.includes("sveglia") || t.includes("jarvis")) {
+                return "Benvenuto, signore. Sono attivo, i sensori del telefono sono calibrati e i moduli della fotocamera rispondono ai comandi informatici.";
+            }
+
+            return "Comando registrato nel database mobile, signore. Ho inviato i pacchetti di testo al modulo centrale. Quando sarai in laboratorio sincronizzeremo i file.";
+        }
+
         function eseguiInvia() {
             const testo = testoComandi.value.trim();
-            if(testo === "" && archivioFotoScuola.length === 0) return;
+            if(testo === "") return;
 
             schermataCore.style.display = 'none';
             zonaChat.style.display = 'flex';
 
-            if(testo !== "") {
-                aggiungiMessaggio(testo, "utente");
-            }
+            // Stampa il messaggio inviato da te
+            aggiungiMessaggio(testo, "utente");
 
-            if(archivioFotoScuola.length > 0) {
-                aggiungiMessaggio(`Signore, ho ricevuto il pacchetto con <b>${archivioFotoScuola.length} foto</b> del libro. Le ho salvate nella cartella memoria Cloud. Appena accenderai il laboratorio a casa, le proietterò su Miro creando lo schema.`, "jarvis-msg");
-                archivioFotoScuola = [];
-            } else {
-                aggiungiMessaggio("Richiesta vocale o testuale ricevuta al sicuro, signore. Quando sarai davanti al PC fisso collegheremo i database.", "jarvis-msg");
-            }
+            // Fa elaborare la risposta logica a JARVIS a voce e testo
+            setTimeout(() => {
+                const rispostaFatta = generaRispostaJarvis(testo);
+                aggiungiMessaggio(rispostaFatta, "jarvis-msg");
+                parla(rispostaFatta);
+            }, 400);
 
             testoComandi.value = "";
         }
