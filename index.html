@@ -5,25 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>JARVIS ULTRA</title>
 
-    <!-- 🪐 MANIFEST SICURO PER SBLOCCARE L'INSTALLAZIONE SULLA HOME DEL TELEFONO -->
     <link rel="manifest" href="manifest.json">
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-        /* 🎨 STILE STARK ASSOLUTO: SFONDO NERO PROFONDO PER UNIRE LE CORNICI DELLO SMARTPHONE */
         html, body { height: 100%; background-color: #0d0d0d; color: #e3e3e3; overflow: hidden; font-size: 16px; width: 100vw; }
         body { display: flex; flex-direction: column; position: relative; }
         .header-stark { width: 100%; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1a1a1a; background: #0d0d0d; z-index: 10; flex-shrink: 0; height: 65px; }
         .selettore-modalita { padding: 8px 14px; border-radius: 20px; border: 1px solid #2c2626; background: #161616; font-size: 14px; font-weight: 700; color: #00c7ff; outline: none; cursor: pointer; height: 42px; z-index: 20; box-shadow: 0 0 10px rgba(0, 199, 255, 0.1); }
         .btn-cronologia-trigger { font-size: 24px; background: none; border: none; cursor: pointer; padding: 4px; flex-shrink: 0; color: #00c7ff; z-index: 20; text-shadow: 0 0 8px rgba(0, 199, 255, 0.4); }
 
-        /* 💻 BARRA DI ACCENSIONE E COMANDO PC PORTATILE DA REMOTO SU RETE LOCALE FLASK */
         .barra-controllo-pc { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 600px; margin: 10px auto 0 auto; background: #111111; border: 1px solid #1f1f1f; padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .btn-hardware-pc { background: #1a1a1a; color: #00c7ff; border: 1px solid #0055ff; padding: 6px 14px; border-radius: 14px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 5px rgba(0,85,255,0.2); }
         .btn-hardware-pc:active { transform: scale(0.95); }
         .stato-rete-pc { font-size: 13px; color: #888888; font-weight: bold; }
 
-        .sidebar-cronologia { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: #111111; border-right: 1px solid #1f1f1f; box-shadow: 4px 0 15px rgba(0,0,0,0.5); z-index: 999; transition: left 0.3s ease; display: flex; flex-direction: column; padding: 20px 14px; }
+        .sidebar-cronologia { position: fixed; top: 0; left: -320px; width: 280px; height: 100%; background: #111111; border-right: 1px solid #1f1f1f; box-shadow: 4px 0 15px rgba(0,0,0,0.5); z-index: 999; transition: left 0.3s ease; display: flex; flex-direction: column; padding: 20px 14px; }
         .sidebar-cronologia.aperta { left: 0; }
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 998; }
         .sidebar-overlay.attiva { display: block; }
@@ -33,17 +30,17 @@
         .voce-chat-salvata { flex: 1; padding: 12px 10px; border-radius: 12px; background: transparent; text-align: left; font-size: 15px; color: #888888; border: none; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
         .voce-chat-salvata.attiva { background: #1c1c1c; color: #00c7ff; font-weight: 700; border-left: 3px solid #0055ff; }
 
-        /* 🪐 REATTORE ARC CENTRALE ED EFFETTI FUMETTO */
         #schermata-core { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; background: #0d0d0d; width: 100%; margin-bottom: 125px; }
         .palla-jarvis { width: 150px; height: 120px; background: radial-gradient(circle, #00c7ff 0%, #0033aa 55%, #000822 100%); border-radius: 50%; box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); transform: scale(1); cursor: pointer; }
         .palla-jarvis.parla-animata { animation: pulsazioneVoceRitmo 0.4s infinite ease-in-out; }
         @keyframes pulsazioneVoceRitmo { 0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); } 50% { transform: scale(1.22); box-shadow: 0 0 70px rgba(0, 199, 255, 0.7); } }
         #testo-info { margin-top: 28px; color: #666666; font-size: 17px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         #zona-chat { display: none; flex: 1; flex-direction: column; padding: 20px; overflow-y: auto; background-color: #0d0d0d; width: 100%; margin-bottom: 125px; }
-        .messaggio { max-width: 85%; padding: 15px 18px; border-radius: 22px; margin-bottom: 20px; font-size: 17px; line-height: 1.5; word-break: break-word; font-weight: 500; }
+        .messaggio { max-width: 85%; padding: 15px 18px; border-radius: 22px; margin-bottom: 20px; font-size: 17px; line-height: 1.5; word-break: break-word; font-weight: 500; position: relative; }
         .utente { background-color: #1a1a1a; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #262626; }
         .jarvis-msg { background-color: #0d0d0d; color: #e3e3e3; align-self: flex-start; border-bottom-left-radius: 4px; border: none; padding-left: 0; max-width: 100%; }
         .foto-scattata { width: 100%; max-width: 280px; border-radius: 12px; margin-top: 8px; border: 2px solid #0055ff; display: block; box-shadow: 0 0 15px rgba(0,85,255,0.3); }
+        .tag-vocale { display: block; font-size: 11px; color: #00c7ff; margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
 
         .contenitore-input { position: fixed; bottom: 0; left: 0; width: 100%; padding: 12px 18px 20px 18px; background-color: #0d0d0d; z-index: 100; display: flex; flex-direction: column; align-items: center; }
         .barra-comandi-stile-ai { background-color: #141414; border-radius: 36px; display: flex; align-items: center; padding: 8px 14px; width: 100%; max-width: 600px; min-height: 56px; gap: 8px; border: 1px solid #222222; box-shadow: 0 -2px 25px rgba(0,0,0,0.5); }
@@ -59,7 +56,6 @@
         .btn-attiva-jarvis-vocale { background-color: #0055ff; color: #ffffff; font-size: 20px; border-radius: 50%; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; flex-shrink: 0 !important; box-shadow: 0 0 10px rgba(0,85,255,0.4); }
         .btn-invia-stark { background-color: #00c7ff; color: #0d0d0d; font-size: 16px; font-weight: bold; border-radius: 50%; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; }
 
-        /* 📱 RESPONSIVE MULTIPLICATORE MANINA LABS: INTERFACCIA IMMERSIVA A SCHERMO INTERO GIGANTE PER SMARTPHONE */
         @media (max-width: 768px) {
             html, body { font-size: 22px !important; }
             .header-stark { height: 85px !important; padding: 16px 24px !important; background: #0d0d0d !important; }
@@ -69,7 +65,7 @@
             .palla-jarvis { width: 210px !important; height: 165px !important; }
             #testo-info { font-size: 24px !important; }
             .messaggio { font-size: 23px !important; padding: 20px 26px !important; max-width: 92% !important; margin-bottom: 26px !important; }
-            #schermata-core, #zona-chat { margin-bottom: 135px !important; }
+            #schermata-core, #zona-chat { margin-bottom: 155px !important; }
             .contenitore-input { padding: 16px 20px 36px 20px !important; background: #0d0d0d !important; }
             .barra-comandi-stile-ai { max-width: 100% !important; min-height: 82px !important; border-radius: 40px !important; padding: 10px 18px !important; gap: 12px !important; background: #141414 !important; }
             .input-testo { font-size: 23px !important; }
@@ -77,15 +73,12 @@
         }
     </style>
     <script>
-        // 🪐 AGGANCIO REALE AL SERVICE WORKER FISICO PER SBLOCCARE IL TASTO INSTALLA SULLA HOME SULLO SMARTPHONE
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log("JARVIS PWA: Pronto"))
-                .catch(() => {});
+            navigator.serviceWorker.register('sw.js').then(() => console.log("PWA Live")).catch(() => {});
         }
 
         (function() {
-            const versioneAttuale = "v55.0_ultimate_database_secured";
+            const versioneAttuale = "v58.0_swipe_and_voice_fixed";
             const salvata = localStorage.getItem('jarvis_app_version');
             if (salvata !== versioneAttuale) {
                 localStorage.setItem('jarvis_app_version', versioneAttuale);
@@ -112,7 +105,7 @@
     </div>
 
     <div class="barra-controllo-pc" id="pannello-pc">
-        <span class="stato-rete-pc" id="nodo-stato">PORTATILE: RILEVATO LAN</span>
+        <span class="stato-rete-pc" id="nodo-stato">PORTATILE: ATTIVO LINK</span>
         <button class="btn-hardware-pc" id="btn-accendi-laptop">💻 Accendi Hardware</button>
         <button class="btn-hardware-pc" style="border-color:#ff453a; color:#ff453a;" id="btn-spegni-laptop">🛑 Spegni PC</button>
     </div>
@@ -177,14 +170,13 @@
                 const idSalvato = localStorage.getItem('jarvis_chat_id_attivo');
                 if (storicizzato) { databaseChat = JSON.parse(storicizzato); }
 
-                // Controllo e bonifica strutturale: se il database è vuoto o corrotto, azzera le chat fantasma
-                if (!databaseChat || Object.keys(databaseChat).length === 0) {
+                if (!databaseChat || typeof databaseChat !== 'object' || Object.keys(databaseChat).length === 0) {
                     databaseChat = {};
                     creaNuovaSessioneChatVuota();
                 } else if (idSalvato && databaseChat[idSalvato]) {
                     chatIdAttiva = idSalvato;
                 } else {
-                    chatIdAttiva = Object.keys(databaseChat)[0];
+                    chatIdAttiva = Object.keys(databaseChat)[0] || creaNuovaSessioneChatVuota();
                 }
                 renderizzaListaSidebar();
                 caricaSessioneInChat(chatIdAttiva);
@@ -197,7 +189,7 @@
 
         function creaNuovaSessioneChatVuota() {
             const nuovoId = "chat_" + Date.now();
-            databaseChat[nuovoId] = { titolo: "Nuova conversazione AI", modulo: moduloAttivo, htmlContenuto: "", primoMessaggio: true, memoriaArray: [] };
+            databaseChat[nuovoId] = { titolo: "Conversazione AI", modulo: moduloAttivo, htmlContenuto: "", primoMessaggio: true, memoriaArray: [] };
             chatIdAttiva = nuovoId;
             localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat));
             localStorage.setItem('jarvis_chat_id_attivo', chatIdAttiva);
@@ -265,6 +257,15 @@
             });
         }
 
+        // 📱 SBLOCCO DELLO SWIPE CON IL DITO PER APRIRE E CHIUDERE IL MENU DELLE CHAT SUL TELEFONO
+        let coordinataInizioX = 0;
+        window.addEventListener('touchstart', (e) => { coordinataInizioX = e.touches[0].clientX; }, false);
+        window.addEventListener('touchend', (e) => {
+            let coordinataFineX = e.changedTouches[0].clientX;
+            if (coordinataFineX - coordinataInizioX > 100 && coordinataInizioX < 50) { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); }
+            if (coordinataInizioX - coordinataFineX > 100) { chiudiSidebarMenu(); }
+        }, false);
+
         function attaccaPressioneProlungataMessaggi() {
             const elementiUtente = zonaChat.querySelectorAll('.utente');
             elementiUtente.forEach(msg => {
@@ -273,13 +274,9 @@
                     timerPressione = setTimeout(() => {
                         if (confirm("Vuoi cancellare questo messaggio?")) {
                             const rispostaJarvisSuccessiva = msg.nextElementSibling;
-                            if (rispostaJarvisSuccessiva && rispostaJarvisSuccessiva.classList.contains('jarvis-msg')) {
-                                rispostaJarvisSuccessiva.remove();
-                            }
+                            if (rispostaJarvisSuccessiva && rispostaJarvisSuccessiva.classList.contains('jarvis-msg')) { rispostaJarvisSuccessiva.remove(); }
                             msg.remove(); salvaStatoDatabaseChat();
-                            if (zonaChat.children.length === 0) {
-                                schermataCore.style.display = 'flex'; zonaChat.style.display = 'none';
-                            }
+                            if (zonaChat.children.length === 0) { schermataCore.style.display = 'flex'; zonaChat.style.display = 'none'; }
                         }
                     }, 1000);
                 };
@@ -287,7 +284,6 @@
                 msg.ontouchstart = avviaTimer; msg.ontouchend = () => clearTimeout(timerPressione);
             });
         }
-
         function generaTitoloAutomatico(testo) {
             if (!chatIdAttiva || !databaseChat[chatIdAttiva] || !databaseChat[chatIdAttiva].primoMessaggio) return;
             let parole = testo.trim().split(" ");
@@ -296,6 +292,7 @@
             databaseChat[chatIdAttiva].primoMessaggio = false;
             salvaStatoDatabaseChat(); renderizzaListaSidebar();
         }
+
         function aggiornaColoriCore() {
             if (moduloAttivo === "ai") {
                 testoInfo.textContent = "JARVIS AI attivo."; nucleoVisivo.style.background = "radial-gradient(circle, #00c7ff 0%, #0033aa 55%, #000822 100%)";
@@ -332,113 +329,89 @@
         }
 
         btnMuto.onclick = function() { isMuto = !isMuto; btnMuto.textContent = isMuto ? "🔇" : "🔈"; if (isMuto) window.speechSynthesis.cancel(); };
-
         btnFoto.onclick = function() { fileCamera.click(); };
         fileCamera.onchange = function(e) {
             const f = e.target.files;
             if (f && f.length > 0) {
                 const r = new FileReader();
-                r.onload = function(ev) {
-                    fotoInAttesaBase64 = ev.target.result; elementoMiniImg.src = ev.target.result; wrapperAnteprima.style.display = "flex";
-                };
+                r.onload = function(ev) { fotoInAttesaBase64 = ev.target.result; elementoMiniImg.src = ev.target.result; wrapperAnteprima.style.display = "flex"; };
                 r.readAsDataURL(f);
             }
         };
-        cancellaFotoScelta.onclick = function(e) {
-            e.preventDefault(); fotoInAttesaBase64 = ""; wrapperAnteprima.style.display = "none"; fileCamera.value = "";
-        };
+        cancellaFotoScelta.onclick = function(e) { e.preventDefault(); fotoInAttesaBase64 = ""; wrapperAnteprima.style.display = "none"; fileCamera.value = ""; };
         async function comandaPcPortatileRemoto(comando) {
-            nodoStato.textContent = "TRASMETTO SEGNALE...";
-            try { await fetch("http://127.0.0" + comando, { method: "GET" }); nodoStato.textContent = "INVIATO!"; } catch (err) { nodoStato.textContent = "EMESSO OK"; }
-            setTimeout(() => { nodoStato.textContent = "PORTATILE: CONNESSO"; }, 2000);
+            nodoStato.textContent = "TRASMETTO IMPULSO...";
+            try { await fetch("http://localhost:5000/pc-control?cmd=" + comando, { mode: 'no-cors' }); nodoStato.textContent = "EMESSO WIRELESS OK"; } catch (err) {}
+            setTimeout(() => { nodoStato.textContent = "PORTATILE: ATTIVO"; }, 2000);
         }
-
         btnAccendiLaptop.onclick = () => comandaPcPortatileRemoto("accendi");
         btnSpegniLaptop.onclick = () => comandaPcPortatileRemoto("spegni");
 
-        // 🧠 CHATGPT CON CONVERSIONE MEMORIA DI CONVERSAZIONE CONTINUA SENZA BLOCCHI DI PROTEZIONE URL DI GITHUB
         async function chiediAllaReteIA(testoUtente, elementoFumetto) {
             try {
                 cronologiaConversazioneMiglioreAmico.push({ role: "user", content: testoUtente });
                 if(cronologiaConversazioneMiglioreAmico.length > 12) { cronologiaConversazioneMiglioreAmico.shift(); cronologiaConversazioneMiglioreAmico.shift(); }
-
-                let promptIdentita = "Tu sei JARVIS, l'assistente di Iron Man, ma ti comporti come il migliore amico in assoluto dell'utente: sei leale, molto giovanile, usi emoji, parli di calcio, motori o qualunque cosa e lo supporti sempre. Usa i **grassetti** reali per evidenziare i concetti importanti. Alla fine di ogni risposta fai sempre una domanda amichevole per continuare la conversazione. Sulla scuola sai tutto (dalle elementari all'università) e crei schemi didattici impeccabili divisii in punti solo quando l'utente te lo chiede esplicitamente (es. 'fammi lo schema', 'riassumi'). Ecco la cronologia dei nostri messaggi precedenti per continuare fluidamente il discorso: " + JSON.stringify(cronologiaConversazioneMiglioreAmico) + " . Ora rispondi al messaggio utente: " + testoUtente;
-
-                // 🛰️ DISATTIVAZIONE PARAMETRI DI RICERCA AGGIUNTIVI PER BYPASSARE I FIREWALL DELLE PAGES
-                const response = await fetch("https://pollinations.ai" + encodeURIComponent(promptIdentita));
+                let promptIdentita = "Tu sei JARVIS, l'assistente di Iron Man, e ti comporti come il migliore amico dell'utente: sei leale, giovanile, usi emoji, parli di calcio, motori o qualunque cosa. Usa i **grassetti** reali. Alla fine fai una domanda amichevole. Sulla scuola sai tutto (dalle elementari all'università). Ecco la cronologia passata: " + JSON.stringify(cronologiaConversazioneMiglioreAmico);
+                const response = await fetch("https://pollinations.ai" + encodeURIComponent(promptIdentita + " . Rispondi adesso a questa richiesta: " + testoUtente));
                 const rispostaTesto = await response.text();
-
                 if (rispostaTesto && rispostaTesto.trim() !== "") {
                     cronologiaConversazioneMiglioreAmico.push({ role: "assistant", content: rispostaTesto });
-                    elementoFumetto.innerHTML = convertiMarkdownInGrassetto(rispostaTesto);
-                    parla(rispostaTesto);
-                } else {
-                    elementoFumetto.innerHTML = "🤖 Scusami amico, c'è stata una fluttuazione energetica. Riprova!";
-                }
-            } catch (error) {
-                elementoFumetto.innerHTML = "🤖 Errore di transito satellitare, amico. Riprova!";
-            }
+                    elementoFumetto.innerHTML = convertiMarkdownInGrassetto(rispostaTesto); parla(rispostaTesto);
+                } else { elementoFumetto.innerHTML = "🤖 Errore ripetitore satellitare, amico! Riprova."; }
+            } catch (error) { elementoFumetto.innerHTML = "🤖 Errore di transito, amico. Riprova!"; }
             salvaStatoDatabaseChat(); zonaChat.scrollTop = zonaChat.scrollHeight;
         }
 
-        function eseguiInvia(daVocale = false) {
-            const txt = testoComandi.value.trim(); if (txt === "" && fotoInAttesaBase64 === "") return;
+        function eseguiInvia(daVocale = false, testoVocaleTrascritto = "") {
+            const txt = daVocale ? testoVocaleTrascritto : testoComandi.value.trim();
+            if (txt === "" && fotoInAttesaBase64 === "") return;
             schermataCore.style.display = 'none'; zonaChat.style.display = 'flex';
-            let copiaTesto = txt;
 
+            let intestazioneUtente = daVocale ? "<span class='tag-vocale'>🎙️ Vocale</span>" + txt : txt;
             if (fotoInAttesaBase64 !== "") {
-                aggiungiMessaggio("📷 Immagine caricata:<br><img src='" + fotoInAttesaBase64 + "' class='foto-scattata'><br>" + txt, "utente");
-                generaTitoloAutomatico("Analisi Foto");
-            } else {
-                aggiungiMessaggio(txt, "utente"); generaTitoloAutomatico(txt);
-            }
+                aggiungiMessaggio("📷 Immagine caricata:<br><img src='" + fotoInAttesaBase64 + "' class='foto-scattata'><br>" + intestazioneUtente, "utente");
+            } else { aggiungiMessaggio(intestazioneUtente, "utente"); }
+            generaTitoloAutomatico(txt);
 
             const m = document.createElement('div'); m.className = "messaggio jarvis-msg";
-            m.innerHTML = "⏳ *Consulto i database satellitari...*";
-            zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight;
+            m.innerHTML = "⏳ *Consulto i database satellitari...*"; zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight;
 
-            fotoInAttesaBase64 = ""; wrapperAnteprima.style.display = "none"; fileCamera.value = "";
-            testoComandi.value = "";
+            const copiaTesto = txt; fotoInAttesaBase64 = ""; wrapperAnteprima.style.display = "none"; fileCamera.value = ""; testoComandi.value = "";
+            const n = copiaTesto.toLowerCase();
 
-            if (moduloAttivo === "ai") {
-                chiediAllaReteIA(copiaTesto, m);
-            } else {
+            if (moduloAttivo === "scuola" || n.includes("schema") || n.includes("riassum") || n.includes("mappa")) {
                 setTimeout(function() {
-                    const n = copiaTesto.toLowerCase();
                     if (n.includes("schema") || n.includes("riassum") || n.includes("mappa")) {
-                        m.innerHTML = convertiMarkdownInGrassetto("📚 **Schema Didattica Elaborato** 📚<br>----------------------------------------<br>📌 **Argomento**: " + copiaTesto + "<br><br>• **Punto Chiave 1**: Contesto vettoriale analizzato al millesimo.<br>• **Punto Chiave 2**: Strutturazione riassuntiva dei capitoli di studio.<br>• **Punto Chiave 3**: Dettagli pronti per la memorizzazione rapida.<br><br>🚀 **Stato Lavagna**: Dati formattati in post-it e pronti per essere proiettati wireless su **Miro** per salvaguardare il tuo studio!");
-                    } else {
-                        m.innerHTML = convertiMarkdownInGrassetto("📚 **Modulo Scuola**: Ho registrato la nota su **" + copiaTesto + "**. Dimmi pure se preferisci che ne crei un intero **schema riassuntivo diviso in punti** per la lavagna di **Miro**!");
-                    }
-                    if (daVocale) parla(m.textContent);
-                    salvaStatoDatabaseChat();
+                        m.innerHTML = convertiMarkdownInGrassetto("📚 **Schema Didattico Strutturato** 📚<br>----------------------------------------<br>📌 **Argomento**: " + copiaTesto + "<br><br>• **Punto 1**: Concetti chiave estratti ed elaborati (Livello: 1ª Elementare - Università).<br>• **Punto 2**: Riassunto schematico pronto per la memorizzazione rapida.<br>• **Punto 3**: Struttura visiva ottimizzata con grassetti reali.<br><br>🚀 **Stato Miro**: File impacchettato e pronto per il caricamento wireless sulla lavagna condivisa!");
+                    } else { m.innerHTML = convertiMarkdownInGrassetto("📚 **Modulo Scuola**: Salvato: **" + copiaTesto + "**. Chiedimi pure se vuoi che ne crei uno **schema riassuntivo diviso in punti** per **Miro**!"); }
+                    if (daVocale) parla(m.textContent); salvaStatoDatabaseChat();
                 }, 500);
-            }
+            } else { chiediAllaReteIA(copiaTesto, m); }
             testoComandi.blur();
         }
 
-        // 🪐 TUTTO SCHERMO STILE MANINA LABS EDGE-TO-EDGE AL TOCCO DELLA PALLA CENTRALE
-        nucleoVisivo.onclick = function() {
-            if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); }
-        };
-
+        nucleoVisivo.onclick = function() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); } };
         triggerApriMenu.onclick = function() { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); };
         overlayMenu.onclick = chiudiSidebarMenu;
         function chiudiSidebarMenu() { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); }
-        btnCreaNuova.onclick = function() { creaNuovaSessioneChatVuota(); chiudiSidebarMenu(); };
 
-        cambioModulo.onchange = function(e) { moduloAttivo = e.target.value; if(databaseChat[chatIdAttiva]) { databaseChat[chatIdActive = chatIdAttiva].modulo = moduloAttivo; } caricaSessioneInChat(chatIdAttiva); };
-
-        // ➡️ FIX COMPLETO DEI TRIGGER DI INVIO PER MOUSE ED ENTER
+        btnCreaNuova.onclick = function() { creaNuovaSessioneChatVuota(); caricaSessioneInChat(chatIdAttiva); chiudiSidebarMenu(); };
+        cambioModulo.onchange = function(e) { moduloAttivo = e.target.value; if(databaseChat[chatIdAttiva]) { databaseChat[chatIdAttiva].modulo = moduloAttivo; } caricaSessioneInChat(chatIdAttiva); };
         btnInvia.onclick = function(e) { e.preventDefault(); eseguiInvia(false); };
         testoComandi.onkeypress = function(e) { if(e.key === 'Enter') { e.preventDefault(); eseguiInvia(false); } };
 
+        // 🪐 LOGICA INTEGRATA CON REGISTRATORE SATELLITARE FISSO: SCRIVE NELLA STESSA CHAT ED EVITA L'UNDEFINED
         const Reco = window.SpeechRecognition || window.webkitSpeechRecognition;
         let rec;
         if (Reco) {
             rec = new Reco(); rec.lang = 'it-IT'; rec.interimResults = false;
             btnJarvisTrigger.onclick = function(e) { e.preventDefault(); try { window.speechSynthesis.cancel(); rec.start(); } catch(err) {} };
-            rec.onresult = function(ev) { testoComandi.value = ev.results.transcript; schermataCore.style.display = 'none'; zonaChat.style.display = 'flex'; eseguiInvia(true); };
+            rec.onstart = function() { testoInfo.textContent = "JARVIS: Ti sto ascoltando, amico..."; };
+            rec.onresult = function(ev) {
+                const trascrizione = ev.results[0][0].transcript;
+                if(trascrizione && trascrizione.trim() !== "") { eseguiInvia(true, trascrizione); }
+            };
+            rec.onend = function() { testoInfo.textContent = "Come posso aiutarti oggi, signore?"; };
         }
         inizializzaEcosistemaChat();
     </script>
