@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>JARVIS ULTRA V85</title>
+    <title>JARVIS ULTRA STABLE</title>
     <link rel="manifest" href="manifest.json">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -24,7 +24,7 @@
         .voce-chat-salvata.attiva { background: #1c1c1c; color: #00c7ff; font-weight: 700; border-left: 3px solid #0055ff; }
         #schermata-core { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; background: #050505; width: 100%; margin-bottom: 125px; }
         .palla-jarvis { width: 150px; height: 120px; background: radial-gradient(circle, #00c7ff 0%, #0033aa 55%, #000822 100%); border-radius: 50%; box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); transform: scale(1); cursor: pointer; transition: all 0.2s ease; }
-        .palla-jarvis.ascolto-attivo { animation: pulsazioneAscoltoPro 0.4s infinite ease-in-out; border: 3px solid #00c7ff; box-shadow: 0 0 90px rgba(0,199,255,1); }
+        .palla-jarvis.ascolto-attivo { animation: pulsazioneAscoltoPro 0.4s infinite ease-in-out !important; border: 3px solid #00c7ff !important; box-shadow: 0 0 90px rgba(0,199,255,1) !important; }
         @keyframes pulsazioneAscoltoPro { 0%, 100% { transform: scale(1.1); } 50% { transform: scale(1.35); } }
         #testo-info { margin-top: 28px; color: #666; font-size: 17px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         #zona-chat { display: none; flex: 1; flex-direction: column; padding: 20px; overflow-y: auto; background-color: #050505; width: 100%; margin-bottom: 125px; }
@@ -37,7 +37,6 @@
         .input-testo { flex: 1; border: none; background: transparent; font-size: 16px; color: #fff; outline: none; padding: 8px 4px; }
         .btn-barra-ai { width: 40px; height: 44px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; background: transparent; color: #888; }
         .btn-attiva-jarvis-vocale { background-color: #0055ff; color: #fff; width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,85,255,0.4); font-size: 20px; }
-        .btn-invia-stark { background-color: #00c7ff; color: #050505; width: 42px; height: 42px; border-radius: 50%; font-weight: bold; font-size: 16px; }
         @media (max-width: 768px) {
             html, body { font-size: 22px !important; }
             .header-stark { height: 85px !important; }
@@ -57,6 +56,7 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(regs) { for(let r of regs) r.unregister(); });
         }
+        /* FORCE WIPE NATIVO PER AGGIRARE IL CONGELAMENTO SAMSUNG */
         localStorage.clear();
     </script>
 </head>
@@ -75,13 +75,13 @@
         <div style="width: 24px;"></div>
     </div>
     <div class="barra-controllo-pc" id="pannello-pc">
-        <span id="nodo-stato" style="font-size:13px; color:#888; font-weight:bold;">SISTEMA STARK V85</span>
+        <span id="nodo-stato" style="font-size:13px; color:#00c7ff; font-weight:bold;">MATRICE JARVIS ACTIVE V85</span>
         <button class="btn-hardware-pc" id="btn-accendi-laptop">💻 Accendi PC</button>
         <button class="btn-hardware-pc" style="border-color:#ff453a; color:#ff453a;" id="btn-spegni-laptop">🛑 Spegni PC</button>
     </div>
     <div id="schermata-core">
         <div class="palla-jarvis" id="nucleo-visivo"></div>
-        <p id="testo-info">SISTEMA AGGIORNATO. PARLA O SCRIVI, SIGNORE.</p>
+        <p id="testo-info">SISTEMA CORRETTO ONLINE. PARLA O SCRIVI, SIGNORE.</p>
     </div>
     <div id="zona-chat"></div>
     <div class="contenitore-input">
@@ -89,7 +89,7 @@
             <button class="btn-barra-ai" id="btn-foto">📷</button>
             <input type="text" class="input-testo" id="testo-comandi" placeholder="Invia un comando a JARVIS...">
             <button class="btn-barra-ai btn-attiva-jarvis-vocale" id="btn-jarvis-trigger">🪐</button>
-            <button class="btn-barra-ai" id="btn-invia" style="color:#00c7ff;">➡️</button>
+            <button class="btn-barra-ai" id="btn-invia" style="color:#00c7ff; font-size:24px;">➡️</button>
         </div>
     </div>
     <script>
@@ -117,7 +117,7 @@
             chatIdAttiva = nuovoId;
             renderizzaListaSidebar();
             zonaChat.innerHTML = "";
-            aggiungiMessaggio("Sistemi operativi resettati, signore. **Database pulito**. Sono JARVIS AI, il tuo migliore amico. Chiedimi di Ronaldo il Fenomeno, supercar, oppure ordina uno **schema** scolastico!", "jarvis-msg");
+            aggiungiMessaggio("Sistemi operativi rigenerati, signore. **Database pulito**. Sono JARVIS AI, il tuo migliore amico. Chiedimi di Ronaldo il Fenomeno, supercar, oppure ordina uno **schema** scolastico!", "jarvis-msg");
         }
 
         function renderizzaListaSidebar() {
@@ -131,7 +131,7 @@
         }
 
         window.addEventListener('touchend', (e) => {
-            if (e.changedTouches[0].clientX > 150 && e.changedTouches[0].clientY > 100 && e.changedTouches[0].clientY < 500) {
+            if (e.changedTouches.clientX > 150 && e.changedTouches.clientY > 100 && e.changedTouches.clientY < 500) {
                 menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva');
             }
         }, false);
@@ -141,8 +141,9 @@
 
         function convertiMarkdownInGrassetto(t) { return t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"); }
         function aggiungiMessaggio(h, c) { schermataCore.style.display = 'none'; zonaChat.style.display = 'flex'; const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight; }
-        btnAccendiLaptop.onclick = () => { nodoStato.textContent = "ACCENSIONE WIRELESS INVIATA"; setTimeout(() => { nodoStato.textContent = "PORTATILE: ONLINE"; }, 1500); };
-        btnSpegniLaptop.onclick = () => { nodoStato.textContent = "SPEGNIMENTO HARDWARE INVIATO"; setTimeout(() => { nodoStato.textContent = "PORTATILE: SPENTO"; }, 1500); };
+
+        btnAccendiLaptop.onclick = () => { nodoStato.textContent = "IMPULSO ACCENSIONE LAN"; setTimeout(() => { nodoStato.textContent = "PORTATILE: ONLINE"; }, 1500); };
+        btnSpegniLaptop.onclick = () => { nodoStato.textContent = "IMPULSO SPEGNIMENTO HARDWARE"; setTimeout(() => { nodoStato.textContent = "PORTATILE: SPENTO"; }, 1500); };
 
         function generaRispostaNativaJarvis(t) {
             const n = t.toLowerCase();
@@ -156,11 +157,7 @@
                 if (n.includes("ferrari")) return "🏎️ **Ferrari**, il mito italiano! Come la SF90 Stradale da 1000 cavalli di pura ingegneria. Ti affascina di più il sound dei motori a benzina o i record dell'elettrico?";
                 return "🏎️ Allacciati le cinture! Pensiamo alla **Bugatti Bolide**, un missile stradale da oltre **500 km/h**! Cosa preferisci in queste supercar?";
             }
-            if (n.includes("ricetta") || n.includes("lasagn") || n.includes("carbonara")) {
-                if (n.includes("lasagn")) return "🍳 Che fame, signore! Le **lasagne alla bolognese** con sfoglie all'uovo, ragù cotto lento e besciamella densa sono un capolavoro culinario. Vuoi che ti elenchi tutte le dosi?";
-                return "🍳 Eccellenza romana: la **vera carbonara** con guanciale croccante, tuorli freschi e pecorino romano grattugiato. Vuoi la ricetta segreta per stasera?";
-            }
-            return "🧠 **JARVIS AI**: Ho elaborato i dati su **" + t + "\"**, signore! Questo concetto è memorizzato nei miei circuiti. Chiedimi qualsiasi approfondimento e lo svilupperemo insieme stasera con i **grassetti reali**! Tu cosa vorresti scoprire di più?";
+            return "🧠 **JARVIS AI**: Ho elaborato i dati su **\"" + t + "\"**, signore! Questo concetto è memorizzato nei miei circuiti. Chiedimi qualsiasi approfondimento e lo svilupperemo insieme stasera con i **grassetti reali**! Tu cosa vorresti scoprire di più?";
         }
 
         function eseguiInvia(daVocale = false, testoVocale = "") {
