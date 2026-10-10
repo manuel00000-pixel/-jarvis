@@ -77,7 +77,7 @@
         <div style="width: 24px;"></div>
     </div>
     <div class="barra-controllo-pc" id="pannello-pc">
-        <span id="nodo-stato" style="font-size:13px; color:#00c7ff; font-weight:bold;">MATRICE ACTIVE V85</span>
+        <span id="nodo-stato" style="font-size:13px; color:#00c7ff; font-weight:bold;">SISTEMA ATTIVO STARK V85</span>
         <button class="btn-hardware-pc" id="btn-accendi-laptop">💻 Accendi PC</button>
         <button class="btn-hardware-pc" style="border-color:#ff453a; color:#ff453a;" id="btn-spegni-laptop">🛑 Spegni PC</button>
     </div>
@@ -152,34 +152,35 @@
 
         btnFoto.onclick = () => fileCamera.click();
         fileCamera.onchange = (e) => {
-            const f = e.target.files[0];
-            if (f) {
+            const f = e.target.files;
+            if (f && f[0]) {
                 const r = new FileReader();
                 r.onload = (ev) => { fotoInAttesaBase64 = ev.target.result; elementoMiniImg.src = ev.target.result; wrapperAnteprima.style.display = "flex"; };
-                r.readAsDataURL(f);
+                r.readAsDataURL(f[0]);
             }
         };
         cancellaFotoScelta.onclick = (e) => { e.preventDefault(); fotoInAttesaBase64 = ""; wrapperAnteprima.style.display = "none"; fileCamera.value = ""; };
         function convertiMarkdownInGrassetto(t) { return t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>"); }
         function aggiungiMessaggio(h, c, f = true) { if(f) { schermataCore.style.display = 'none'; zonaChat.style.display = 'flex'; } const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight; }
 
+        // 💻 SEGNALE WIRELESS AGGANCIO HARDWARE PORTATILE SU IP LOCALE REALE 192.168.1.107
         async function inviaSegnaleHardwareFlask(cmd) {
-            try { await fetch("http://127.0.0" + cmd, { method: "GET", mode: 'no-cors' }); } catch (e) {}
+            try { await fetch("http://192.168.1" + cmd, { method: "GET", mode: 'no-cors' }); } catch (e) {}
         }
         btnAccendiLaptop.onclick = () => { nodoStato.textContent = "ACCENSIONE INVIATA"; inviaSegnaleHardwareFlask("accendi"); };
         btnSpegniLaptop.onclick = () => { nodoStato.textContent = "SPEGNIMENTO INVIATO"; inviaSegnaleHardwareFlask("spegni"); };
 
-        // 🧠 IL PONTE SATELLITARE WIRELESS CON PYCHARM INTERROGA IL TUO SERVER INTERNO GEMINI CON PASSAGGIO MEDIA IMMAGINE BASE64
+        // 🧠 IL PONTE SATELLITARE WIRELESS CON PYCHARM INTERROGA L'IP DEL TUO SERVER PER GEMINI API E MAPS
         async function chiediAllaReteIA(testoUtente, elementoFumetto, fotoInviata = "") {
             try {
-                const response = await fetch("http://127.0.0", {
+                const response = await fetch("http://192.168.1", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ prompt: testoUtente, modulo: moduloAttivo, image: fotoInviata })
                 });
                 const dati = await response.json();
 
-                // 🗺️ INTERCETTAZIONE GOOGLE MAPS DIRETTAMENTE DA GEMINI API AGENTE AGGANCIO NATIVO SMARTPHONE
+                // 🗺️ INTERCETTAZIONE GOOGLE MAPS APPLICAZIONE NATIVA DEL SMARTPHONE SAMSUNG
                 if (dati.action === "maps" || testoUtente.toLowerCase().includes("andiamo a") || testoUtente.toLowerCase().includes("rotta verso")) {
                     let dest = dati.destinazione || testoUtente.replace(/andiamo a/i, "").replace(/rotta verso/i, "").trim();
                     window.location.href = "geo:0,0?q=" + encodeURIComponent(dest);
@@ -188,7 +189,7 @@
                 }
                 elementoFumetto.innerHTML = convertiMarkdownInGrassetto(dati.risposta);
             } catch (error) {
-                elementoFumetto.innerHTML = "🤖 *Connessione locale non rilevata, signore. Avvia lo script app.py su PyCharm per accendere Gemini!*";
+                elementoFumetto.innerHTML = "🤖 *Connessione wireless locale non trovata. Controlla che il telefono sia agganciato al Wi-Fi del PC portatile!*";
             }
             zonaChat.scrollTop = zonaChat.scrollHeight;
         }
@@ -196,18 +197,16 @@
         function eseguiInvia(daVocale = false, testoVocale = "") {
             const txt = daVocale ? testoVocale : testoComandi.value.trim(); if (txt === "" && fotoInAttesaBase64 === "") return;
             let intUtente = daVocale ? "<span class='tag-vocale'>🎙️ Vocale</span>" + txt : txt;
-
             if (fotoInAttesaBase64 !== "") {
                 aggiungiMessaggio("📷 Immagine inviata:<br><img src='" + fotoInAttesaBase64 + "' class='foto-scattata'><br>" + intUtente, "utente");
             } else { aggiungiMessaggio(intUtente, "utente"); }
 
             const m = document.createElement('div'); m.className = "messaggio jarvis-msg";
-            m.innerHTML = "⏳ *Analisi multimodale e vettoriale Gemini in corso...*";
+            m.innerHTML = "⏳ *Consulto i database satellitari Gemini...*";
             zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight;
 
             let copiaFoto = fotoInAttesaBase64; fotoInAttesaBase64 = ""; wrapperAnteprima.style.display = "none"; fileCamera.value = ""; testoComandi.value = "";
-            chiediAllaReteIA(txt, m, copiaFoto);
-            testoComandi.blur();
+            chiediAllaReteIA(txt, m, copiaFoto); testoComandi.blur();
         }
 
         btnInvia.onclick = () => eseguiInvia(false);
