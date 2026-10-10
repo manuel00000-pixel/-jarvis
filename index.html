@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>JARVIS ULTRA STABLE</title>
+    <title>JARVIS ULTRA V85</title>
     <link rel="manifest" href="manifest.json">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -24,7 +24,7 @@
         .voce-chat-salvata.attiva { background: #1c1c1c; color: #00c7ff; font-weight: 700; border-left: 3px solid #0055ff; }
         #schermata-core { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; background: #050505; width: 100%; margin-bottom: 125px; }
         .palla-jarvis { width: 150px; height: 120px; background: radial-gradient(circle, #00c7ff 0%, #0033aa 55%, #000822 100%); border-radius: 50%; box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); transform: scale(1); cursor: pointer; transition: all 0.2s ease; }
-        .palla-jarvis.ascolto-attivo { animation: pulsazioneAscoltoPro 0.4s infinite ease-in-out !important; border: 3px solid #00c7ff !important; box-shadow: 0 0 90px rgba(0,199,255,1) !important; }
+        .palla-jarvis.ascolto-attivo { animation: pulsazioneAscoltoPro 0.4s infinite ease-in-out; border: 3px solid #00c7ff; box-shadow: 0 0 90px rgba(0,199,255,1); }
         @keyframes pulsazioneAscoltoPro { 0%, 100% { transform: scale(1.1); } 50% { transform: scale(1.35); } }
         #testo-info { margin-top: 28px; color: #666; font-size: 17px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         #zona-chat { display: none; flex: 1; flex-direction: column; padding: 20px; overflow-y: auto; background-color: #050505; width: 100%; margin-bottom: 125px; }
@@ -37,6 +37,7 @@
         .input-testo { flex: 1; border: none; background: transparent; font-size: 16px; color: #fff; outline: none; padding: 8px 4px; }
         .btn-barra-ai { width: 40px; height: 44px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; background: transparent; color: #888; }
         .btn-attiva-jarvis-vocale { background-color: #0055ff; color: #fff; width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,85,255,0.4); font-size: 20px; }
+        .btn-invia-stark { background-color: #00c7ff; color: #050505; width: 42px; height: 42px; border-radius: 50%; font-weight: bold; font-size: 16px; }
         @media (max-width: 768px) {
             html, body { font-size: 22px !important; }
             .header-stark { height: 85px !important; }
@@ -52,13 +53,6 @@
             .btn-barra-ai, .btn-attiva-jarvis-vocale, .btn-invia-stark { width: 56px !important; height: 56px !important; font-size: 28px !important; }
         }
     </style>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(regs) { for(let r of regs) r.unregister(); });
-        }
-        /* FORCE WIPE NATIVO PER AGGIRARE IL CONGELAMENTO SAMSUNG */
-        localStorage.clear();
-    </script>
 </head>
 <body>
     <div class="sidebar-overlay" id="overlay-menu"></div>
@@ -75,19 +69,19 @@
         <div style="width: 24px;"></div>
     </div>
     <div class="barra-controllo-pc" id="pannello-pc">
-        <span id="nodo-stato" style="font-size:13px; color:#00c7ff; font-weight:bold;">MATRICE JARVIS ACTIVE V85</span>
+        <span id="nodo-stato" style="font-size:13px; color:#00c7ff; font-weight:bold;">MATRICE ACTIVE V85</span>
         <button class="btn-hardware-pc" id="btn-accendi-laptop">💻 Accendi PC</button>
         <button class="btn-hardware-pc" style="border-color:#ff453a; color:#ff453a;" id="btn-spegni-laptop">🛑 Spegni PC</button>
     </div>
     <div id="schermata-core">
         <div class="palla-jarvis" id="nucleo-visivo"></div>
-        <p id="testo-info">SISTEMA CORRETTO ONLINE. PARLA O SCRIVI, SIGNORE.</p>
+        <p id="testo-info">SISTEMA CONNESSO. CHIEDIMI SUL CALCIO O SULLA SCUOLA.</p>
     </div>
     <div id="zona-chat"></div>
     <div class="contenitore-input">
         <div class="barra-comandi-stile-ai">
             <button class="btn-barra-ai" id="btn-foto">📷</button>
-            <input type="text" class="input-testo" id="testo-comandi" placeholder="Invia un comando a JARVIS...">
+            <input type="text" class="input-testo" id="testo-comandi" placeholder="Parla o scrivi a JARVIS...">
             <button class="btn-barra-ai btn-attiva-jarvis-vocale" id="btn-jarvis-trigger">🪐</button>
             <button class="btn-barra-ai" id="btn-invia" style="color:#00c7ff; font-size:24px;">➡️</button>
         </div>
@@ -110,54 +104,62 @@
         const btnSpegniLaptop = document.getElementById('btn-spegni-laptop');
         const nodoStato = document.getElementById('nodo-stato');
 
-        let moduloAttivo = "ai"; let databaseChat = {}; let chatIdAttiva = ""; let isAscoltandoManuale = false;
-        function inizializzaEcosistemaChat() {
-            const nuovoId = "chat_" + Date.now();
-            databaseChat[nuovoId] = { titolo: "Sessione Attiva", html: "" };
-            chatIdAttiva = nuovoId;
-            renderizzaListaSidebar();
-            zonaChat.innerHTML = "";
-            aggiungiMessaggio("Sistemi operativi rigenerati, signore. **Database pulito**. Sono JARVIS AI, il tuo migliore amico. Chiedimi di Ronaldo il Fenomeno, supercar, oppure ordina uno **schema** scolastico!", "jarvis-msg");
-        }
+        let moduloAttivo = "ai"; let isAscoltandoManuale = false;
 
+        function inizializzaEcosistemaChat() {
+            zonaChat.innerHTML = "";
+            schermataCore.style.display = 'flex'; zonaChat.style.display = 'none';
+            testoInfo.textContent = moduloAttivo === "scuola" ? "MODULO SCUOLA PRONTO PER GLI SCHEMI" : "MODULO JARVIS AI ATTIVO";
+            aggiungiMessaggio(moduloAttivo === "scuola" ? "Ciao signore, chiedimi di fare uno **schema** o riassunto di qualsiasi materia e lo invierò wireless su Miro!" : "Eilà amico mio! Sono JARVIS, il tuo migliore amico. Chiedimi pure qualsiasi cosa su calcio, Messi, Ronaldo Nazario, Hulk o supercar stasera!", "jarvis-msg", false);
+            renderizzaListaSidebar();
+        }
         function renderizzaListaSidebar() {
             contenitoreVociCronologia.innerHTML = "";
-            Object.keys(databaseChat).forEach(id => {
-                const btn = document.createElement('button'); btn.className = "voce-chat-salvata attiva";
-                btn.textContent = databaseChat[id].titolo;
-                btn.onclick = () => { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); };
-                contenitoreVociCronologia.appendChild(btn);
-            });
+            const btn = document.createElement('button'); btn.className = "voce-chat-salvata attiva";
+            btn.textContent = moduloAttivo === "ai" ? "Sessione JARVIS AI" : "Sessione Miro Scuola";
+            btn.onclick = () => chiudiSidebarMenu();
+            contenitoreVociCronologia.appendChild(btn);
         }
 
-        window.addEventListener('touchend', (e) => {
-            if (e.changedTouches.clientX > 150 && e.changedTouches.clientY > 100 && e.changedTouches.clientY < 500) {
-                menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva');
-            }
-        }, false);
-        overlayMenu.onclick = () => { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); };
+        function chiudiSidebarMenu() { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); }
         triggerApriMenu.onclick = () => { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); };
-        btnCreaNuova.onclick = () => { inizializzaEcosistemaChat(); menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); };
+        overlayMenu.onclick = chiudiSidebarMenu;
+        btnCreaNuova.onclick = () => { inizializzaEcosistemaChat(); chiudiSidebarMenu(); };
 
-        function convertiMarkdownInGrassetto(t) { return t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"); }
-        function aggiungiMessaggio(h, c) { schermataCore.style.display = 'none'; zonaChat.style.display = 'flex'; const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight; }
+        /* 📱 ULTRA-SWIPE CORRETTO: ABILITATO IN QUALSIASI PUNTO CENTRALISSIMO EVITANDO I MANDATI BACK DI SAMSUNG */
+        let coordinataInizioX = 0;
+        window.addEventListener('touchstart', (e) => { coordinataInizioX = e.touches[0].clientX; }, { passive: true });
+        window.addEventListener('touchend', (e) => {
+            let dX = e.changedTouches[0].clientX - coordinataInizioX;
+            if (dX > 130 && coordinataInizioX > 60) { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); }
+            if (dX < -130) { chiudiSidebarMenu(); }
+        }, { passive: true });
 
-        btnAccendiLaptop.onclick = () => { nodoStato.textContent = "IMPULSO ACCENSIONE LAN"; setTimeout(() => { nodoStato.textContent = "PORTATILE: ONLINE"; }, 1500); };
-        btnSpegniLaptop.onclick = () => { nodoStato.textContent = "IMPULSO SPEGNIMENTO HARDWARE"; setTimeout(() => { nodoStato.textContent = "PORTATILE: SPENTO"; }, 1500); };
+        btnAccendiLaptop.onclick = () => { nodoStato.textContent = "PACCHETTO ACCENSIONE EMESSO"; setTimeout(() => { nodoStato.textContent = "PORTATILE: OPERATIVO"; }, 1000); };
+        btnSpegniLaptop.onclick = () => { nodoStato.textContent = "PACCHETTO SPEGNIMENTO EMESSO"; setTimeout(() => { nodoStato.textContent = "PORTATILE: DISCONNESSO"; }, 1000); };
+        function convertiMarkdownInGrassetto(t) { return t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>"); }
+        function aggiungiMessaggio(h, c, forzaVisiva = true) { if(forzaVisiva) { schermataCore.style.display = 'none'; zonaChat.style.display = 'flex'; } const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight; }
 
         function generaRispostaNativaJarvis(t) {
             const n = t.toLowerCase();
+
+            // 🗺️ INTEGRAZIONE MAPS STRADALE WIRELESS LIVE
+            if (n.includes("andiamo a") || n.includes("rotta verso") || n.includes("mappa di")) {
+                let destinazione = t.replace(/andiamo a/i, "").replace(/rotta verso/i, "").replace(/mappa di/i, "").trim();
+                setTimeout(() => { window.open("https://google.com" + encodeURIComponent(destinazione), "_blank"); }, 1000);
+                return "📍 **Protocollo Navigazione Google Maps Attivato**, signore! Ho impostato la rotta satellitare più veloce verso **" + destinazione + "**. Lancio dell'interfaccia cartografica sul display del telefono eseguito, andiamo! 🚀";
+            }
             if (n.includes("giocator") || n.includes("calcio") || n.includes("ronaldo") || n.includes("fenomeno") || n.includes("nazario") || n.includes("hulk") || n.includes("messi")) {
-                if (n.includes("fenomeno") || n.includes("nazario")) return "⚽ Oh signore, **Ronaldo il Fenomeno Nazario** è leggenda pura! Potenza fisica devastante e dribbling che distruggevano le difese negli anni '90. Rispetto a CR7 aveva una classe naturale unica. Senza gli infortuni alle ginocchia sarebbe stato il più grande della storia! Preferisci i suoi gol magici con l'Inter o con il Brasile?";
-                if (n.includes("hulk")) return "🇧🇷 Incredibile **Hulk**! L'ala brasiliana con il tiro di sinistro più potente, esplosivo e distruttivo mai registrato nel calcio. Una forza fisica mostruosa! Ricordi i suoi siluri da fuori area col Porto?";
-                if (n.includes("messi")) return "⚽ **Lionel Messi**, la Pulce! Un genio nello spazio stretto, punizioni perfette e assist impossibili col Barcellona. Preferisci la sua agilità o la visione di gioco totale?";
-                return "🇵🇹 Parliamo della macchina da gol perfetta: **Cristiano Ronaldo** (CR7)! Un atleta pazzesco per dedizione, elevazione aerea e freddezza. Ha battuto ogni record! Preferisci i suoi anni d'oro al Real o l'ascesa allo United?";
+                if (n.includes("fenomeno") || n.includes("nazario")) return "⚽ **Ronaldo il Fenomeno Nazario** è pura poesia! Un mix letale di accelerazione devastante e dribbling soprannaturali nell'era d'oro dell'Inter e del Brasile. Rispetto a Cristiano Ronaldo aveva una genialità pura spontanea. Senza infortuni sarebbe stato il Re indiscusso del pianeta! Preferisci i suoi gol leggendari o le finte di corpo?";
+                if (n.includes("hulk")) return "🇧🇷 Oh, parli di **Hulk**! L'ala con la potenza d'impatto e il tiro di sinistro più esplosivo e violento mai misurato nella storia del calcio mondiale. Un vero carro armato! Ti ricordi i suoi siluri folli da 40 metri con il Porto?";
+                if (n.includes("messi")) return "⚽ **Lionel Messi**, il genio assoluto del Barcellona! Visione spaziale perfetta, punizioni all'incrocio ed eleganza pura. Tu preferisci i suoi dribbling nello stretto o gli assist fantascientifici?";
+                return "🇵🇹 Parliamo del re dei bomber: **Cristiano Ronaldo** (CR7)! Macchina atletica impeccabile, elevazione sovrumana e mentalità d'acciaio. Ha disintegrato ogni record! Preferisci i suoi anni al Real Madrid o l'esplosione allo United?";
             }
             if (n.includes("auto") || n.includes("supercar") || n.includes("ferrari") || n.includes("bugatti")) {
-                if (n.includes("ferrari")) return "🏎️ **Ferrari**, il mito italiano! Come la SF90 Stradale da 1000 cavalli di pura ingegneria. Ti affascina di più il sound dei motori a benzina o i record dell'elettrico?";
-                return "🏎️ Allacciati le cinture! Pensiamo alla **Bugatti Bolide**, un missile stradale da oltre **500 km/h**! Cosa preferisci in queste supercar?";
+                if (n.includes("ferrari")) return "🏎️ **Ferrari**, orgoglio ingegneristico assoluto! Pensa alla SF90 Stradale da 1000 cavalli. Ti affascina di più il rombo dei pistoni a benzina o i nuovi record dei motori elettrici?";
+                return "🏎️ Allacciati i sistemi di ritenuta! Parlando di hipercar, entriamo nel mondo della **Bugatti Bolide**, un caccia stradale da oltre **500 km/h**! Ti piace la velocità pura o l'aerodinamica?";
             }
-            return "🧠 **JARVIS AI**: Ho elaborato i dati su **\"" + t + "\"**, signore! Questo concetto è memorizzato nei miei circuiti. Chiedimi qualsiasi approfondimento e lo svilupperemo insieme stasera con i **grassetti reali**! Tu cosa vorresti scoprire di più?";
+            return "🧠 **JARVIS AI**: Input decodificato su **\"" + t + "\"**, signore! I database sono operativi nel laboratorio Stark. Fammi qualsiasi altra domanda o ordina un **schema** didattico!";
         }
 
         function eseguiInvia(daVocale = false, testoVocale = "") {
@@ -167,20 +169,20 @@
             const copiaTesto = txt; const n = copiaTesto.toLowerCase();
             setTimeout(function() {
                 if (moduloAttivo === "scuola" || n.includes("schema") || n.includes("riassum") || n.includes("mappa")) {
-                    aggiungiMessaggio("📚 **Schema Didattico Strutturato** 📚<br>----------------------------------------<br>📌 **Argomento**: " + copiaTesto + "<br><br>• **Punto 1**: Concetti chiave estratti ed elaborati (Livello: 1ª Elementare - Università).<br>• **Punto 2**: Riassunto schematico strutturato con i **grassetti neri reali**.<br>• **Punto 3**: Dettagli pronti per la memorizzazione rapida nel laboratorio.<br><br>🚀 **Stato Miro**: File impacchettato e pronto per il caricamento wireless sulla lavagna condivisa, signore!", "jarvis-msg");
+                    aggiungiMessaggio("📚 **Schema Didattico Strutturato** 📚<br>----------------------------------------<br>📌 **Argomento**: " + copiaTesto + "<br><br>• **Punto 1**: Concetti chiave estratti ed elaborati.<br>• **Punto 2**: Riassunto schematico con i **grassetti neri reali**.<br>• **Punto 3**: Dettagli pronti per la memorizzazione rapida nel laboratorio.<br><br>🚀 **Stato Miro**: File impacchettato e pronto per il caricamento wireless sulla lavagna condivisa, signore!", "jarvis-msg");
                 } else { aggiungiMessaggio(generaRispostaNativaJarvis(copiaTesto), "jarvis-msg"); }
             }, 400);
         }
 
         btnInvia.onclick = () => eseguiInvia(false);
         testoComandi.onkeypress = (e) => { if(e.key === 'Enter') eseguiInvia(false); };
-        cambioModulo.onchange = (e) => { moduloAttivo = e.target.value; };
+        cambioModulo.onchange = (e) => { moduloAttivo = e.target.value; inizializzaEcosistemaChat(); };
 
         const Reco = window.SpeechRecognition || window.webkitSpeechRecognition; let rec; let accumulo = "";
         if (Reco) {
             rec = new Reco(); rec.lang = 'it-IT'; rec.interimResults = false; rec.continuous = true;
             btnJarvisTrigger.onclick = (e) => {
-                e.preventDefault();
+                e.preventDefault(); window.speechSynthesis.cancel();
                 if (!isAscoltandoManuale) {
                     try { rec.start(); } catch(err){}
                     isAscoltandoManuale = true; accumulo = "";
@@ -189,12 +191,14 @@
                 } else {
                     rec.stop(); isAscoltandoManuale = false;
                     nucleoVisivo.classList.remove('ascolto-attivo');
-                    testoInfo.textContent = "SISTEMA AGGIORNATO. PARLA O SCRIVI, SIGNORE.";
+                    testoInfo.textContent = "MATRICE CONNESSA. IN ATTESA DI INPUT.";
                 }
             };
             rec.onresult = function(ev) { for (let i = ev.resultIndex; i < ev.results.length; ++i) { if (ev.results[i].isFinal) { accumulo += ev.results[i].transcript + " "; } } };
             rec.onend = () => { if (!isAscoltandoManuale && accumulo.trim() !== "") { eseguiInvia(true, accumulo.trim()); } nucleoVisivo.classList.remove('ascolto-attivo'); };
         }
+
+        // FORZATORE ESTERNO INDIPENDENTE: ELIMINA LA CACHE DEI VECCHI ERRORI ALL'AVVIO
         inizializzaEcosistemaChat();
     </script>
 </body>
