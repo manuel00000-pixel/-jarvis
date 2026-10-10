@@ -9,15 +9,14 @@
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-        /* 🎨 STILE STARK ASSOLUTO: SFONDO NERO PROFONDO PER SMARTPHONE EDGE-TO-EDGE */
+        /* 🎨 STILE STARK ASSOLUTO: SFONDO NERO PROFONDO EDGE-TO-EDGE */
         html, body { height: 100%; background-color: #0d0d0d; color: #e3e3e3; overflow: hidden; font-size: 16px; width: 100vw; }
         body { display: flex; flex-direction: column; position: relative; }
-
         .header-stark { width: 100%; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1a1a1a; background: #0d0d0d; z-index: 10; flex-shrink: 0; height: 65px; }
         .selettore-modalita { padding: 8px 14px; border-radius: 20px; border: 1px solid #2c2626; background: #161616; font-size: 14px; font-weight: 700; color: #00c7ff; outline: none; cursor: pointer; height: 42px; z-index: 20; box-shadow: 0 0 10px rgba(0, 199, 255, 0.1); }
         .btn-cronologia-trigger { font-size: 24px; background: none; border: none; cursor: pointer; padding: 4px; flex-shrink: 0; color: #00c7ff; z-index: 20; text-shadow: 0 0 8px rgba(0, 199, 255, 0.4); }
 
-        /* 💻 PLANCIA WIRELESS CONTROLLO PC PORTATILE DA REMOTO */
+        /* 💻 PLANCIA CONTROLLO PC PORTATILE DA REMOTO */
         .barra-controllo-pc { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 600px; margin: 10px auto 0 auto; background: #111111; border: 1px solid #1f1f1f; padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .btn-hardware-pc { background: #1a1a1a; color: #00c7ff; border: 1px solid #0055ff; padding: 6px 14px; border-radius: 14px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 5px rgba(0,85,255,0.2); }
         .btn-hardware-pc:active { transform: scale(0.95); }
@@ -40,7 +39,6 @@
         @keyframes pulsazioneVoceRitmo { 0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); } 50% { transform: scale(1.18); box-shadow: 0 0 70px rgba(0, 199, 255, 0.6); } }
         @keyframes pulsazioneAscoltoPro { 0%, 100% { transform: scale(1.15); } 50% { transform: scale(1.45); } }
         #testo-info { margin-top: 28px; color: #666666; font-size: 17px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-
         #zona-chat { display: none; flex: 1; flex-direction: column; padding: 20px; overflow-y: auto; background-color: #0d0d0d; width: 100%; margin-bottom: 125px; }
         .messaggio { max-width: 85%; padding: 15px 18px; border-radius: 22px; margin-bottom: 20px; font-size: 17px; line-height: 1.5; word-break: break-word; font-weight: 500; position: relative; }
         .utente { background-color: #1a1a1a; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #262626; }
@@ -54,9 +52,9 @@
         .box-anteprima-foto { display: none; align-items: center; background: #222222; padding: 4px 10px; border-radius: 16px; margin-right: 4px; gap: 6px; flex-shrink: 0; border: 1px solid #333333; }
         .img-mini-anteprima { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
         .btn-rimuovi-anteprima { background: none; border: none; font-size: 14px; cursor: pointer; color: #ff453a; font-weight: bold; }
-
         .input-testo { flex: 1; border: none; background: transparent; font-size: 16px; color: #ffffff; outline: none; padding: 8px 4px; font-weight: 500; display: block; }
         .input-testo::placeholder { color: #555555; }
+
         .btn-barra-ai { width: 40px; height: 44px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; background: transparent; flex-shrink: 0 !important; }
         .btn-media { color: #888888; }
         .btn-attiva-jarvis-vocale { background-color: #0055ff; color: #ffffff; font-size: 20px; border-radius: 50%; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; flex-shrink: 0 !important; box-shadow: 0 0 10px rgba(0,85,255,0.4); }
@@ -83,8 +81,9 @@
             navigator.serviceWorker.register('sw.js').then(() => console.log("PWA Live")).catch(() => {});
         }
 
+        /* 🪐 FORZATORE CACHE V85.0: COSTRINGE AD AZZERARE LA MEMORIA CORROTTA SUL SAMSUNG COMPIENDO IL PURGE */
         (function() {
-            const versioneAttuale = "v72.0_samsung_swipe_and_proxy_fixed";
+            const versioneAttuale = "v85.0_stark_recovery_stable";
             const salvata = localStorage.getItem('jarvis_app_version');
             if (salvata !== versioneAttuale) {
                 localStorage.setItem('jarvis_app_version', versioneAttuale);
@@ -101,6 +100,7 @@
         <button class="btn-nuova-chat" id="btn-crea-nuova">➕ Nuova Chat AI</button>
         <div class="lista-voci-chat" id="contenitore-voci-cronologia"></div>
     </div>
+
     <div class="header-stark">
         <button class="btn-cronologia-trigger" id="trigger-apri-menu">☰</button>
         <select class="selettore-modalita" id="cambio-modulo">
@@ -109,9 +109,8 @@
         </select>
         <div style="width: 24px;"></div>
     </div>
-
     <div class="barra-controllo-pc" id="pannello-pc">
-        <span class="stato-rete-pc" id="nodo-stato">PORTATILE: ATTIVO</span>
+        <span class="stato-rete-pc" id="nodo-stato">PORTATILE: OPERATIVO</span>
         <button class="btn-hardware-pc" id="btn-accendi-laptop">💻 Accendi PC</button>
         <button class="btn-hardware-pc" style="border-color:#ff453a; color:#ff453a;" id="btn-spegni-laptop">🛑 Spegni PC</button>
     </div>
@@ -122,6 +121,7 @@
     </div>
 
     <div id="zona-chat"></div>
+
     <div class="contenitore-input">
         <div class="barra-comandi-stile-ai">
             <input type="file" id="file-camera" accept="image/*" style="display: none;">
@@ -138,7 +138,6 @@
             <button class="btn-barra-ai btn-invia-stark" id="btn-invia">➡️</button>
         </div>
     </div>
-
     <script>
         const schermataCore = document.getElementById('schermata-core');
         const zonaChat = document.getElementById('zona-chat');
@@ -165,152 +164,83 @@
         const nodoStato = document.getElementById('nodo-stato');
 
         let isMuto = false; let moduloAttivo = "ai"; let databaseChat = {}; let chatIdAttiva = ""; let fotoInAttesaBase64 = ""; let isAscoltandoManuale = false;
+
         function inizializzaEcosistemaChat() {
             try {
                 const storicizzato = localStorage.getItem('jarvis_database_conversazioni');
                 const idSalvato = localStorage.getItem('jarvis_chat_id_attivo');
                 if (storicizzato) { databaseChat = JSON.parse(storicizzato); }
-
                 if (!databaseChat || typeof databaseChat !== 'object' || Object.keys(databaseChat).length === 0) {
-                    databaseChat = {};
-                    creaNuovaSessioneChatVuota();
-                } else if (idSalvato && databaseChat[idSalvato]) {
-                    chatIdAttiva = idSalvato;
-                } else {
-                    chatIdAttiva = Object.keys(databaseChat);
-                }
-                renderizzaListaSidebar();
-                caricaSessioneInChat(chatIdAttiva);
-            } catch(e) {
-                databaseChat = {};
-                creaNuovaSessioneChatVuota();
+                    databaseChat = {}; creaNuovaSessioneChatVuota();
+                } else if (idSalvato && databaseChat[idSalvato]) { chatIdAttiva = idSalvato; } else { chatIdAttiva = Object.keys(databaseChat)[0]; }
                 renderizzaListaSidebar(); caricaSessioneInChat(chatIdAttiva);
-            }
+            } catch(e) { databaseChat = {}; creaNuovaSessioneChatVuota(); renderizzaListaSidebar(); caricaSessioneInChat(chatIdAttiva); }
         }
-
         function creaNuovaSessioneChatVuota() {
             const nuovoId = "chat_" + Date.now();
             databaseChat[nuovoId] = { titolo: "Conversazione AI", modulo: moduloAttivo, htmlContenuto: "", primoMessaggio: true };
-            chatIdAttiva = nuovoId;
-            localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat));
-            localStorage.setItem('jarvis_chat_id_attivo', chatIdAttiva);
-            return nuovoId;
+            chatIdAttiva = nuovoId; localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat));
+            localStorage.setItem('jarvis_chat_id_attivo', chatIdAttiva); return nuovoId;
         }
 
         function salvaStatoDatabaseChat() {
             if(chatIdAttiva && databaseChat[chatIdAttiva]) {
-                databaseChat[chatIdAttiva].htmlContenuto = zonaChat.innerHTML;
-                databaseChat[chatIdAttiva].modulo = moduloAttivo;
+                databaseChat[chatIdAttiva].htmlContenuto = zonaChat.innerHTML; databaseChat[chatIdAttiva].modulo = moduloAttivo;
                 localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat));
             }
         }
+
         function caricaSessioneInChat(id) {
             if(!id || !databaseChat[id]) return;
-            chatIdAttiva = id;
-            localStorage.setItem('jarvis_chat_id_attivo', chatIdAttiva);
-            moduloAttivo = databaseChat[id].modulo || "ai";
-            cambioModulo.value = moduloAttivo;
-            aggiornaColoriCore();
+            chatIdAttiva = id; localStorage.setItem('jarvis_chat_id_attivo', chatIdAttiva); moduloAttivo = databaseChat[id].modulo || "ai";
+            cambioModulo.value = moduloAttivo; aggiornaColoriCore();
             if (databaseChat[id].htmlContenuto && databaseChat[id].htmlContenuto.trim() !== "") {
-                zonaChat.innerHTML = databaseChat[id].htmlContenuto;
-                schermataCore.style.display = 'none'; zonaChat.style.display = 'flex';
+                zonaChat.innerHTML = databaseChat[id].htmlContenuto; schermataCore.style.display = 'none'; zonaChat.style.display = 'flex';
             } else {
                 zonaChat.innerHTML = ""; schermataCore.style.display = 'flex'; zonaChat.style.display = 'none';
                 aggiungiMessaggio(moduloAttivo === "scuola" ? "Ciao signore, ordina e ti farò lo schema di scuola." : "Eilà amico mio! Sono JARVIS AI, il tuo migliore amico. Chiedimi pure qualsiasi cosa ti passi per la testa!", "jarvis-msg", false);
             }
-            attaccaPressioneProlungataMessaggi();
-            renderizzaListaSidebar();
-            zonaChat.scrollTop = zonaChat.scrollHeight;
+            attaccaPressioneProlungataMessaggi(); renderizzaListaSidebar(); zonaChat.scrollTop = zonaChat.scrollHeight;
         }
 
         function renderizzaListaSidebar() {
-            contenitoreVociCronologia.innerHTML = "";
-            const chiavi = Object.keys(databaseChat);
-            if(chiavi.length === 0) return;
-
+            contenitoreVociCronologia.innerHTML = ""; const chiavi = Object.keys(databaseChat); if(chiavi.length === 0) return;
             chiavi.forEach(id => {
-                const container = document.createElement('div');
-                container.className = "riga-voce-container";
-                const btn = document.createElement('button');
-                btn.className = "voce-chat-salvata" + (id === chatIdAttiva ? " attiva" : "");
-                btn.textContent = databaseChat[id].titolo || "Conversazione AI";
-                btn.onclick = function() { caricaSessioneInChat(id); chiudiSidebarMenu(); };
-
+                const container = document.createElement('div'); container.className = "riga-voce-container";
+                const btn = document.createElement('button'); btn.className = "voce-chat-salvata" + (id === chatIdAttiva ? " attiva" : "");
+                btn.textContent = databaseChat[id].titolo || "Conversazione AI"; btn.onclick = function() { caricaSessioneInChat(id); chiudiSidebarMenu(); };
                 let timerSidebar;
-                const avviaTimerSidebar = () => {
-                    timerSidebar = setTimeout(() => {
-                        if (confirm("Vuoi eliminare questa chat?")) {
-                            delete databaseChat[id];
-                            localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat));
-                            const rimaste = Object.keys(databaseChat);
-                            chatIdAttiva = rimaste.length > 0 ? rimaste : creaNuovaSessioneChatVuota();
-                            caricaSessioneInChat(chatIdAttiva);
-                        }
-                    }, 1000);
-                };
-                btn.onmousedown = avviaTimerSidebar; btn.onmouseup = () => clearTimeout(timerSidebar);
-                btn.ontouchstart = avviaTimerSidebar; btn.ontouchend = () => clearTimeout(timerSidebar);
-
-                container.appendChild(btn);
-                contenitoreVociCronologia.appendChild(container);
+                const avviaTimerSidebar = () => { timerSidebar = setTimeout(() => { if (confirm("Vuoi eliminare questa chat?")) { delete databaseChat[id]; localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat)); const rimaste = Object.keys(databaseChat); chatIdAttiva = rimaste.length > 0 ? rimaste[0] : creaNuovaSessioneChatVuota(); caricaSessioneInChat(chatIdAttiva); } }, 1000); };
+                btn.onmousedown = avviaTimerSidebar; btn.onmouseup = () => clearTimeout(timerSidebar); btn.ontouchstart = avviaTimerSidebar; btn.ontouchend = () => clearTimeout(timerSidebar);
+                container.appendChild(btn); contenitoreVociCronologia.appendChild(container);
             });
         }
-        /* 📱 ULTRA-SWIPE SAMSUNG: ABILITATO IN QUALSIASI AREA CENTRALE DELLA SCHERMATA EVITANDO LE FRECCE */
+
+        /* 📱 ULTRA-SWIPE SAMSUNG: ABILITATO IN QUALSIASI AREA CENTRALE OVUNQUE EVITANDO LE FRECCE */
         let coordinataInizioX = 0; let coordinataInizioY = 0;
-        window.addEventListener('touchstart', (e) => {
-            coordinataInizioX = e.touches[0].clientX;
-            coordinataInizioY = e.touches[0].clientY;
-        }, { passive: true });
-
+        window.addEventListener('touchstart', (e) => { coordinataInizioX = e.touches[0].clientX; coordinataInizioY = e.touches[0].clientY; }, { passive: true });
         window.addEventListener('touchend', (e) => {
-            let coordinataFineX = e.changedTouches[0].clientX;
-            let coordinataFineY = e.changedTouches[0].clientY;
-            let differenzaX = coordinataFineX - coordinataInizioX;
-            let differenzaY = Math.abs(coordinataFineY - coordinataInizioY);
-
-            if (differenzaX > 120 && differenzaY < 60) { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); }
-            if (differenzaX < -120 && differenzaY < 60) { chiudiSidebarMenu(); }
+            let coordinataFineX = e.changedTouches[0].clientX; let coordinataFineY = e.changedTouches[0].clientY;
+            let dX = coordinataFineX - coordinataInizioX; let dY = Math.abs(coordinataFineY - coordinataInizioY);
+            if (dX > 120 && dY < 60) { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); }
+            if (dX < -120 && dY < 60) { chiudiSidebarMenu(); }
         }, { passive: true });
-
         function attaccaPressioneProlungataMessaggi() {
             const elementiUtente = zonaChat.querySelectorAll('.utente');
             elementiUtente.forEach(msg => {
                 let timerPressione;
-                const avviaTimer = () => {
-                    timerPressione = setTimeout(() => {
-                        if (confirm("Vuoi cancellare questo messaggio?")) {
-                            const rispostaJarvisSuccessiva = msg.nextElementSibling;
-                            if (rispostaJarvisSuccessiva && rispostaJarvisSuccessiva.classList.contains('jarvis-msg')) { rispostaJarvisSuccessiva.remove(); }
-                            msg.remove(); salvaStatoDatabaseChat();
-                            if (zonaChat.children.length === 0) { schermataCore.style.display = 'flex'; zonaChat.style.display = 'none'; }
-                        }
-                    }, 1000);
-                };
-                msg.onmousedown = avviaTimer; msg.onmouseup = () => clearTimeout(timerPressione);
-                msg.ontouchstart = avviaTimer; msg.ontouchend = () => clearTimeout(timerPressione);
+                const avviaTimer = () => { timerPressione = setTimeout(() => { if (confirm("Vuoi cancellare questo messaggio?")) { const ris = msg.nextElementSibling; if (ris && ris.classList.contains('jarvis-msg')) { ris.remove(); } msg.remove(); salvaStatoDatabaseChat(); if (zonaChat.children.length === 0) { schermataCore.style.display = 'flex'; zonaChat.style.display = 'none'; } } }, 1000); };
+                msg.onmousedown = avviaTimer; msg.onmouseup = () => clearTimeout(timerPressione); msg.ontouchstart = avviaTimer; msg.ontouchend = () => clearTimeout(timerPressione);
             });
         }
 
-        function generaTitoloAutomatico(testo) {
-            if (!chatIdAttiva || !databaseChat[chatIdAttiva] || !databaseChat[chatIdAttiva].primoMessaggio) return;
-            let parole = testo.trim().split(" ");
-            databaseChat[chatIdAttiva].titolo = parole.slice(0, 3).join(" ") + (parole.length > 3 ? "..." : "");
-            databaseChat[chatIdAttiva].primoMessaggio = false;
-            salvaStatoDatabaseChat(); renderizzaListaSidebar();
-        }
-        function convertiMarkdownInGrassetto(testo) { return testo.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>"); }
-        function aggiungiMessaggio(testoHtml, css, salva = true) { const m = document.createElement('div'); m.className = "messaggio " + css; m.innerHTML = convertiMarkdownInGrassetto(testoHtml); zonaChat.appendChild(m); if(salva) salvaStatoDatabaseChat(); attaccaPressioneProlungataMessaggi(); zonaChat.scrollTop = zonaChat.scrollHeight; }
+        function generaTitoloAutomatico(testo) { if (!chatIdAttiva || !databaseChat[chatIdAttiva] || !databaseChat[chatIdAttiva].primoMessaggio) return; let parole = testo.trim().split(" "); databaseChat[chatIdAttiva].titolo = parole.slice(0, 3).join(" ") + (parole.length > 3 ? "..." : ""); databaseChat[chatIdAttiva].primoMessaggio = false; salvaStatoDatabaseChat(); renderizzaListaSidebar(); }
+        function convertiMarkdownInGrassetto(t) { return t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>"); }
+        function aggiungiMessaggio(h, c, s = true) { const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); if(s) salvaStatoDatabaseChat(); attaccaPressioneProlungataMessaggi(); zonaChat.scrollTop = zonaChat.scrollHeight; }
 
-        async function comandaPcPortatileRemoto(comando) {
-            nodoStato.textContent = "IMPULSO LAN...";
-            try {
-                await fetch("http://127.0.0" + comando, { method: "GET", mode: 'no-cors', credentials: 'omit' });
-                nodoStato.textContent = "LAN TRASMESSA!";
-            } catch (err) { nodoStato.textContent = "SEGNALE EMESSO OK"; }
-            setTimeout(() => { nodoStato.textContent = "PORTATILE: ATTIVO"; }, 2000);
-        }
+        // 💻 SEGNALE PC FLASK PORTATILE LAN BYPASS SU RETE DOMESTICA PORTA LOCALE FLASK
+        async function comandaPcPortatileRemoto(c) { nodoStato.textContent = "IMPULSO LAN..."; try { await fetch("http://127.0.0" + c, { method: "GET", mode: 'no-cors', credentials: 'omit' }); nodoStato.textContent = "LAN TRASMESSA!"; } catch (e) { nodoStato.textContent = "SEGNALE EMESSO OK"; } setTimeout(() => { nodoStato.textContent = "PORTATILE: OPERATIVO"; }, 2000); }
         btnAccendiLaptop.onclick = () => comandaPcPortatileRemoto("accendi"); btnSpegniLaptop.onclick = () => comandaPcPortatileRemoto("spegni");
-
         function generaRispostaNativaJarvis(testoUtente) {
             const n = testoUtente.toLowerCase().trim();
             if (n.includes("giocator") || n.includes("forte") || n.includes("calcio") || n.includes("messi") || n.includes("ronaldo") || n.includes("fenomeno") || n.includes("nazario") || n.includes("hulk") || n.includes("mbapp") || n.includes("gol")) {
@@ -318,7 +248,7 @@
                 if (n.includes("messi")) return "⚽ **Lionel Messi**, la Pulce! Un genio puro dello spazio stretto, delle punizioni e degli assist impossibili. Ti piace di più la sua agilità o la visione di gioco totale?";
                 if (n.includes("ronaldo") || n.includes("cristiano") || n.includes("cr7")) return "🇵🇹 Parliamo di **Cristiano Ronaldo**, CR7! Un mostro assoluto di dedizione e freddezza sottoporta. Ha battuto ogni record storico di gol esistente! Preferisci i suoi anni d'oro al Real o l'ascesa allo United?";
                 if (n.includes("hulk")) return "🇧🇷 Incredibile **Hulk**! L'ala brasiliana famosa per avere il tiro di sinistro più potente ed esplosivo mai registrato nella storia del calcio. Una forza fisica spaventosa! Ti ricordi i suoi siluri da fuori area col Porto?";
-                return "⚽ Il calcio è spettacolare! L'era moderna è stata cannibalizzata dal duopolio di **Cristiano Ronaldo** e **Lionel Messi**, ma il futuro è nelle mani di **Kylian Mbappé**! Qual è il tuo bomber preferito?";
+                return "⚽ Il calcio è spettacolare! L'era moderna è stata dominata dal duopolio di **Cristiano Ronaldo** e **Lionel Messi**, ma il futuro è nelle mani di **Kylian Mbappé**! Qual è il tuo bomber preferito?";
             }
             if (n.includes("auto") || n.includes("macchin") || n.includes("supercar") || n.includes("ferrari") || n.includes("bugatti")) {
                 if (n.includes("ferrari")) return "🏎️ **Ferrari**, la leggenda! Come la splendida SF90 Stradale da 1000 cavalli di pura ingegneria italiana stradale. Ti affascina il sound classico o la velocità dei motori elettrici?";
@@ -326,7 +256,7 @@
             }
             if (n.includes("ricetta") || n.includes("lasagn") || n.includes("pasta") || n.includes("carbonara") || n.includes("pizza")) {
                 if (n.includes("lasagn")) return "🍳 Che fame, amico mio! La ricetta delle **lasagne alla bolognese** fatte con sfoglie all'uovo, ragù di carne cotto lento e besciamella densa è un capolavoro. Ti va se ti elenco tutte le dosi?";
-                return "🍳 Simbolo d'eccellenza: la **vera carbonara romana** fatta unicamente con guanciale croccante, tuorli d'uovo freschi e pecorino romano grattugiato. Vuoi che ti scriva l'elenco completo per stasera?";
+                return "🍳 Simbolo d'eccellenza: la **vera carbonara romana** fatta unicamente con guanciale croccante, tuorli d'uovo primescelto e pecorino romano grattugiato. Vuoi che ti scriva l'elenco completo per stasera?";
             }
             if (n.includes("content") || n.includes("felic") || n.includes("bella") || n.includes("ciao") || n.includes("come va")) {
                 if (n.includes("content") || n.includes("felic")) return "👋 **Grande amico mio!** Sentire che **oggi sei contento** accende al massimo tutti i circuiti del laboratorio! Condividere questa energia positiva è fantastico. Cosa ha reso speciale la tua giornata?";
@@ -355,7 +285,7 @@
         nucleoVisivo.onclick = function() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); } };
         triggerApriMenu.onclick = function() { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); };
         overlayMenu.onclick = chiudiSidebarMenu; function chiudiSidebarMenu() { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); }
-        btnCreaNuova.onclick = function() { creaNuovaSessioneChatVuota(); caricaSessioneInChat(chatIdAttiva); chiudiSidebarMenu(); };
+        btnCreaNuova.onclick = function() { creaNuovaSessioneChatVuota(); chiudiSidebarMenu(); };
         cambioModulo.onchange = function(e) { moduloAttivo = e.target.value; if(databaseChat[chatIdAttiva]) { databaseChat[chatIdAttiva].modulo = moduloAttivo; } caricaSessioneInChat(chatIdAttiva); };
         btnInvia.onclick = function(e) { e.preventDefault(); eseguiInvia(false); }; testoComandi.onkeypress = function(e) { if(e.key === 'Enter') { e.preventDefault(); eseguiInvia(false); } };
 
@@ -366,9 +296,13 @@
                 e.preventDefault(); window.speechSynthesis.cancel();
                 if (!isAscoltandoManuale) {
                     try { rec.start(); } catch(err){}
-                    isAscoltandoManuale = true; stringaTrascrizioneAccumulata = ""; nucleoVisivo.classList.add('ascolto-attivo'); testoInfo.textContent = "🎙️ JARVIS IN ASCOLTO... PARLA ORA, SIGNORE.";
+                    isAscoltandoManuale = true; stringaTrascrizioneAccumulata = "";
+                    nucleoVisivo.classList.add('ascolto-attivo');
+                    testoInfo.textContent = "🎙️ JARVIS IN ASCOLTO... PARLA ORA, SIGNORE.";
                 } else {
-                    rec.stop(); isAscoltandoManuale = false; nucleoVisivo.classList.remove('ascolto-attivo'); testoInfo.textContent = "Come posso aiutarti oggi, signore?";
+                    rec.stop(); isAscoltandoManuale = false;
+                    nucleoVisivo.classList.remove('ascolto-attivo');
+                    testoInfo.textContent = "Come posso aiutarti oggi, signore?";
                 }
             };
             rec.onresult = function(ev) { for (let i = ev.resultIndex; i < ev.results.length; ++i) { if (ev.results[i].isFinal) { stringaTrascrizioneAccumulata += ev.results[i].transcript + " "; } } };
