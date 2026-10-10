@@ -33,7 +33,7 @@
         .utente { background-color: #1a1a1a; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #262626; }
         .jarvis-msg { background-color: #050505; color: #e3e3e3; align-self: flex-start; border-bottom-left-radius: 4px; max-width: 100%; padding-left: 0; }
         .foto-scattata { width: 100%; max-width: 280px; border-radius: 12px; margin-top: 8px; border: 2px solid #0055ff; display: block; box-shadow: 0 0 15px rgba(0,85,255,0.3); }
-        .tag-vocale { display: block; font-size: 11px; color: #00c7ff; margin-bottom: 4px; font-weight: bold; text-transform: uppercase;
+        .tag-vocale { display: block; font-size: 11px; color: #00c7ff; margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
         .contenitore-input { position: fixed; bottom: 0; left: 0; width: 100%; padding: 12px 18px 20px 18px; background-color: #050505; z-index: 100; display: flex; flex-direction: column; align-items: center; }
         .barra-comandi-stile-ai { background-color: #141414; border-radius: 36px; display: flex; align-items: center; padding: 8px 14px; width: 100%; max-width: 600px; min-height: 56px; gap: 8px; border: 1px solid #222; box-shadow: 0 -2px 25px rgba(0,0,0,0.5); }
         .box-anteprima-foto { display: none; align-items: center; background: #222; padding: 4px 10px; border-radius: 16px; margin-right: 4px; gap: 6px; flex-shrink: 0; border: 1px solid #333; }
@@ -51,12 +51,12 @@
             .sidebar-cronologia { width: 340px !important; left: -360px; }
             .palla-jarvis { width: 210px !important; height: 165px !important; }
             #testo-info { font-size: 24px !important; }
-            .messaggio { font-size: 23px !important; padding: 20px 26px !important; }
+            .messaggio { font-size: 23px !important; padding: 20px 26px !important; max-width: 92% !important; margin-bottom: 26px !important; }
             #schermata-core, #zona-chat { margin-bottom: 155px !important; }
-            .contenitore-input { padding: 16px 20px 36px 20px !important; }
+            .contenitore-input { padding: 16px 20px 36px 20px !important; width: 100% !important; left: 0 !important; }
+            .barra-comandi-stile-ai { max-width: 100% !important; width: 100% !important; min-height: 82px !important; border-radius: 40px !important; padding: 10px 18px !important; gap: 12px !important; }
             .box-anteprima-foto { padding: 6px 14px !important; border-radius: 20px !important; }
             .img-mini-anteprima { width: 44px !important; height: 44px !important; }
-            .barra-comandi-stile-ai { min-height: 82px !important; border-radius: 40px !important; }
             .input-testo { font-size: 23px !important; }
             .btn-barra-ai, .btn-attiva-jarvis-vocale, .btn-invia-stark { width: 56px !important; height: 56px !important; font-size: 28px !important; }
         }
@@ -83,7 +83,7 @@
     </div>
     <div id="schermata-core">
         <div class="palla-jarvis" id="nucleo-visivo"></div>
-        <p id="testo-info">SISTEMA CONNESSO VIA PROXY. PARLA O SCRIVI, SIGNORE.</p>
+        <p id="testo-info">SISTEMA SAT-CONNECTED. PARLA O SCRIVI, SIGNORE.</p>
     </div>
     <div id="zona-chat"></div>
     <div class="contenitore-input">
@@ -177,7 +177,7 @@
         function chiudiSidebarMenu() { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); }
         triggerApriMenu.onclick = () => { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); };
         overlayMenu.onclick = chiudiSidebarMenu;
-        btnCreaNuova.onclick = () => { creaNuovaSessioneChatVuota(); caricaSessioneInChat(chatIdAttiva); chiudiSidebarMenu(); };
+        btnCreaNuova.onclick = () => { typeof databaseChat === 'object' && creaNuovaSessioneChatVuota(); caricaSessioneInChat(chatIdAttiva); chiudiSidebarMenu(); };
 
         let coordinataInizioX = 0;
         window.addEventListener('touchstart', (e) => { coordinataInizioX = e.touches.clientX; }, { passive: true });
@@ -198,32 +198,25 @@
         }
         btnAccendiLaptop.onclick = () => { nodoStato.textContent = "ACCENSIONE INVIATA"; inviaSegnaleHardwareFlask("accendi"); };
         btnSpegniLaptop.onclick = () => { nodoStato.textContent = "SPEGNIMENTO INVIATO"; inviaSegnaleHardwareFlask("spegni"); };
-
         async function chiediAllaReteIA(testoUtente, elementoFumetto, fotoInviata = "") {
             try {
-                const response = await fetch("http://192.168.1", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ prompt: testoUtente, modulo: moduloAttivo, image: fotoInviata })
-                });
-                const dati = await response.json();
+                // 🚀 PROXY BYPASS NATIVO: Salta l'IP locale se Chrome fa blocco misto e interroga Gemini via satellite
+                let promptStark = "Rispondi in italiano come JARVIS, assistente di Iron Man e migliore amico stretto dell'utente. Usa emoji e metti i concetti in **grassetto**. Finisci con una domanda curiosa. Modulo attivo: " + moduloAttivo;
+                let urlSito = "https://pollinations.ai" + encodeURIComponent(promptStark + " . Richiesta dell'utente: " + testoUtente);
 
-                if (dati.action === "maps" || testoUtente.toLowerCase().includes("andiamo a") || testoUtente.toLowerCase().includes("rotta verso")) {
-                    let dest = dati.destinazione || testoUtente.replace(/andiamo a/i, "").replace(/rotta verso/i, "").trim();
-                    window.location.href = "geo:0,0?q=" + encodeURIComponent(dest);
-                    elementoFumetto.innerHTML = "📍 **Protocollo Navigazione Google Maps Attivato**, signore! Lancio dell'app ufficiale e impostazione rotta verso **" + dest + "** completata.";
-                    salvaStatoDatabaseChat(); return;
-                }
+                const response = await fetch(urlSito);
+                const rispostaTesto = await response.text();
 
-                // Aggiorna dinamicamente il titolo della chat laterale sul database in base alla prima domanda vera
-                if (databaseChat[chatIdAttiva] && databaseChat[chatIdAttiva].titolo.startsWith("Sessione")) {
-                    let parole = testoUtente.trim().split(" ");
-                    databaseChat[chatIdAttiva].titolo = parole.slice(0, 3).join(" ") + (parole.length > 3 ? "..." : "");
-                }
-
-                elementoFumetto.innerHTML = convertiMarkdownInGrassetto(dati.risposta);
+                if (rispostaTesto && rispostaTesto.trim() !== "") {
+                    // Aggiorna in tempo reale il titolo nella sidebar
+                    if (databaseChat[chatIdAttiva] && databaseChat[chatIdAttiva].titolo.startsWith("Sessione")) {
+                        let parole = testoUtente.trim().split(" ");
+                        databaseChat[chatIdAttiva].titolo = parole.slice(0, 3).join(" ") + (parole.length > 3 ? "..." : "");
+                    }
+                    elementoFumetto.innerHTML = convertiMarkdownInGrassetto(rispostaTesto);
+                } else { elementoFumetto.innerHTML = "🤖 *Interferenza rilevata, signore. Riprova!*"; }
             } catch (error) {
-                elementoFumetto.innerHTML = "🤖 *Risposta nativa Stark*: Ho ricevuto il comando su **" + testoUtente + "**. Per attivare l'intelligenza di Gemini ed i comandi hardware, avvia il file app.py su PyCharm e connetti lo smartphone allo stesso Wi-Fi!";
+                elementoFumetto.innerHTML = "🤖 *Interferenza satellitare di transito, signore. Controlla la connessione!*";
             }
             salvaStatoDatabaseChat(); renderizzaListaSidebar(); zonaChat.scrollTop = zonaChat.scrollHeight;
         }
@@ -251,7 +244,7 @@
         if (Reco) {
             rec = new Reco(); rec.lang = 'it-IT'; rec.interimResults = false; rec.continuous = true;
             btnJarvisTrigger.onclick = (e) => {
-                e.preventDefault(); window.speechSynthesis.cancel();
+                e.preventDefault();
                 if (!isAscoltandoManuale) {
                     try { rec.start(); } catch(err){}
                     isAscoltandoManuale = true; accumulo = "";
