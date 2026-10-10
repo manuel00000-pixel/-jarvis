@@ -21,7 +21,7 @@
         .sidebar-overlay.attiva { display: block; }
         .btn-nuova-chat { width: 100%; padding: 12px; border-radius: 24px; border: 1px dashed #333; background: #161616; font-size: 15px; font-weight: 700; color: #e3e3e3; cursor: pointer; margin-bottom: 20px; }
         .lista-voci-chat { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .voce-chat-salvata { width: 100%; padding: 12px 10px; border-radius: 12px; background: transparent; text-align: left; font-size: 15px; color: #888; border: none; cursor: pointer; }
+        .voce-chat-salvata { width: 100%; padding: 12px 10px; border-radius: 12px; background: transparent; text-align: left; font-size: 15px; color: #888; border: none; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
         .voce-chat-salvata.attiva { background: #1c1c1c; color: #00c7ff; font-weight: 700; border-left: 3px solid #0055ff; }
         #schermata-core { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; background: #050505; width: 100%; margin-bottom: 125px; }
         .palla-jarvis { width: 150px; height: 120px; background: radial-gradient(circle, #00c7ff 0%, #0033aa 55%, #000822 100%); border-radius: 50%; box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); transform: scale(1); cursor: pointer; transition: all 0.2s ease; }
@@ -29,11 +29,11 @@
         @keyframes pulsazioneAscoltoPro { 0%, 100% { transform: scale(1.1); } 50% { transform: scale(1.35); } }
         #testo-info { margin-top: 28px; color: #666; font-size: 17px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         #zona-chat { display: none; flex: 1; flex-direction: column; padding: 20px; overflow-y: auto; background-color: #050505; width: 100%; margin-bottom: 125px; }
-        .messaggio { max-width: 85%; padding: 15px 18px; border-radius: 22px; margin-bottom: 20px; font-size: 17px; line-height: 1.5; word-break: break-word; }
+        .messaggio { max-width: 85%; padding: 15px 18px; border-radius: 22px; margin-bottom: 20px; font-size: 17px; line-height: 1.5; word-break: break-word; font-weight: 500; position: relative; }
         .utente { background-color: #1a1a1a; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #262626; }
         .jarvis-msg { background-color: #050505; color: #e3e3e3; align-self: flex-start; border-bottom-left-radius: 4px; max-width: 100%; padding-left: 0; }
         .foto-scattata { width: 100%; max-width: 280px; border-radius: 12px; margin-top: 8px; border: 2px solid #0055ff; display: block; box-shadow: 0 0 15px rgba(0,85,255,0.3); }
-        .tag-vocale { display: block; font-size: 11px; color: #00c7ff; margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
+        .tag-vocale { display: block; font-size: 11px; color: #00c7ff; margin-bottom: 4px; font-weight: bold; text-transform: uppercase;
         .contenitore-input { position: fixed; bottom: 0; left: 0; width: 100%; padding: 12px 18px 20px 18px; background-color: #050505; z-index: 100; display: flex; flex-direction: column; align-items: center; }
         .barra-comandi-stile-ai { background-color: #141414; border-radius: 36px; display: flex; align-items: center; padding: 8px 14px; width: 100%; max-width: 600px; min-height: 56px; gap: 8px; border: 1px solid #222; box-shadow: 0 -2px 25px rgba(0,0,0,0.5); }
         .box-anteprima-foto { display: none; align-items: center; background: #222; padding: 4px 10px; border-radius: 16px; margin-right: 4px; gap: 6px; flex-shrink: 0; border: 1px solid #333; }
@@ -125,22 +125,59 @@
         let moduloAttivo = "ai"; let isAscoltandoManuale = false; let databaseChat = {}; let chatIdAttiva = ""; let fotoInAttesaBase64 = "";
 
         function inizializzaEcosistemaChat() {
-            zonaChat.innerHTML = ""; schermataCore.style.display = 'flex'; zonaChat.style.display = 'none';
-            aggiungiMessaggio(moduloAttivo === "scuola" ? "Ciao signore, ordina uno **schema** didattico e lo caricherò wireless su Miro!" : "Sono JARVIS AI. Chiedimi di calciatori, supercar o invia un comando!", "jarvis-msg", false);
+            try {
+                const storicizzato = localStorage.getItem('jarvis_db_v85');
+                if (storicizzato) { databaseChat = JSON.parse(storicizzato); }
+            } catch(e) {}
+            if (!databaseChat || typeof databaseChat !== 'object' || Object.keys(databaseChat).length === 0) {
+                databaseChat = {};
+                creaNuovaSessioneChatVuota();
+            } else {
+                chatIdAttiva = Object.keys(databaseChat)[0];
+            }
+            caricaSessioneInChat(chatIdAttiva);
+        }
+        function creaNuovaSessioneChatVuota() {
+            const nuovoId = "chat_" + Date.now();
+            databaseChat[nuovoId] = { titolo: moduloAttivo == "ai" ? "Sessione JARVIS AI" : "Sessione Miro Scuola", htmlContenuto: "", modulo: moduloAttivo };
+            chatIdAttiva = nuovoId; localStorage.setItem('jarvis_db_v85', JSON.stringify(databaseChat));
+            return nuovoId;
+        }
+
+        function salvaStatoDatabaseChat() {
+            if (chatIdAttiva && databaseChat[chatIdAttiva]) {
+                databaseChat[chatIdAttiva].htmlContenuto = zonaChat.innerHTML;
+                databaseChat[chatIdAttiva].modulo = moduloAttivo;
+                localStorage.setItem('jarvis_db_v85', JSON.stringify(databaseChat));
+            }
+        }
+
+        function caricaSessioneInChat(id) {
+            if (!id || !databaseChat[id]) return;
+            chatIdAttiva = id; moduloAttivo = databaseChat[id].modulo || "ai"; cambioModulo.value = moduloAttivo;
+            if (databaseChat[id].htmlContenuto && databaseChat[id].htmlContenuto.trim() !== "") {
+                zonaChat.innerHTML = databaseChat[id].htmlContenuto; schermataCore.style.display = 'none'; zonaChat.style.display = 'flex';
+            } else {
+                zonaChat.innerHTML = ""; schermataCore.style.display = 'flex'; zonaChat.style.display = 'none';
+                aggiungiMessaggio(moduloAttivo === "scuola" ? "Ciao signore, ordina uno **schema** didattico e lo caricherò wireless su Miro!" : "Sono JARVIS AI. Chiedimi di calciatori, supercar o invia un comando!", "jarvis-msg", false);
+            }
             renderizzaListaSidebar();
         }
+
         function renderizzaListaSidebar() {
             contenitoreVociCronologia.innerHTML = "";
-            const btn = document.createElement('button'); btn.className = "voce-chat-salvata attiva";
-            btn.textContent = moduloAttivo === "ai" ? "Sessione JARVIS AI" : "Sessione Miro Scuola";
-            btn.onclick = () => chiudiSidebarMenu();
-            contenitoreVociCronologia.appendChild(btn);
+            Object.keys(databaseChat).forEach(id => {
+                const btn = document.createElement('button'); btn.className = "voce-chat-salvata" + (id === chatIdAttiva ? " attiva" : "");
+                btn.textContent = databaseChat[id].titolo;
+                btn.onclick = () => { caricaSessioneInChat(id); chiudiSidebarMenu(); };
+                contenitoreVociCronologia.appendChild(btn);
+            });
         }
 
         function chiudiSidebarMenu() { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); }
         triggerApriMenu.onclick = () => { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); };
         overlayMenu.onclick = chiudiSidebarMenu;
-        btnCreaNuova.onclick = () => { inizializzaEcosistemaChat(); chiudiSidebarMenu(); };
+        btnCreaNuova.onclick = () => { creaNuovaSessioneChatVuota(); caricaSessioneInChat(chatIdAttiva); chiudiSidebarMenu(); };
 
         let coordinataInizioX = 0;
         window.addEventListener('touchstart', (e) => { coordinataInizioX = e.touches.clientX; }, { passive: true });
@@ -151,26 +188,17 @@
         }, { passive: true });
 
         btnFoto.onclick = () => fileCamera.click();
-        fileCamera.onchange = (e) => {
-            const f = e.target.files;
-            if (f && f[0]) {
-                const r = new FileReader();
-                r.onload = (ev) => { fotoInAttesaBase64 = ev.target.result; elementoMiniImg.src = ev.target.result; wrapperAnteprima.style.display = "flex"; };
-                r.readAsDataURL(f[0]);
-            }
-        };
+        fileCamera.onchange = (e) => { const f = e.target.files; if (f && f[0]) { const r = new FileReader(); r.onload = (ev) => { fotoInAttesaBase64 = ev.target.result; elementoMiniImg.src = ev.target.result; wrapperAnteprima.style.display = "flex"; }; r.readAsDataURL(f[0]); } };
         cancellaFotoScelta.onclick = (e) => { e.preventDefault(); fotoInAttesaBase64 = ""; wrapperAnteprima.style.display = "none"; fileCamera.value = ""; };
         function convertiMarkdownInGrassetto(t) { return t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>"); }
-        function aggiungiMessaggio(h, c, f = true) { if(f) { schermataCore.style.display = 'none'; zonaChat.style.display = 'flex'; } const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight; }
+        function aggiungiMessaggio(h, c, f = true) { if(f) { schermataCore.style.display = 'none'; zonaChat.style.display = 'flex'; } const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); if(f) salvaStatoDatabaseChat(); zonaChat.scrollTop = zonaChat.scrollHeight; }
 
-        // 💻 SEGNALE WIRELESS AGGANCIO HARDWARE PORTATILE SU IP LOCALE REALE 192.168.1.107
         async function inviaSegnaleHardwareFlask(cmd) {
             try { await fetch("http://192.168.1" + cmd, { method: "GET", mode: 'no-cors' }); } catch (e) {}
         }
         btnAccendiLaptop.onclick = () => { nodoStato.textContent = "ACCENSIONE INVIATA"; inviaSegnaleHardwareFlask("accendi"); };
         btnSpegniLaptop.onclick = () => { nodoStato.textContent = "SPEGNIMENTO INVIATO"; inviaSegnaleHardwareFlask("spegni"); };
 
-        // 🧠 IL PONTE SATELLITARE WIRELESS CON PYCHARM INTERROGA L'IP DEL TUO SERVER PER GEMINI API E MAPS
         async function chiediAllaReteIA(testoUtente, elementoFumetto, fotoInviata = "") {
             try {
                 const response = await fetch("http://192.168.1", {
@@ -180,18 +208,24 @@
                 });
                 const dati = await response.json();
 
-                // 🗺️ INTERCETTAZIONE GOOGLE MAPS APPLICAZIONE NATIVA DEL SMARTPHONE SAMSUNG
                 if (dati.action === "maps" || testoUtente.toLowerCase().includes("andiamo a") || testoUtente.toLowerCase().includes("rotta verso")) {
                     let dest = dati.destinazione || testoUtente.replace(/andiamo a/i, "").replace(/rotta verso/i, "").trim();
                     window.location.href = "geo:0,0?q=" + encodeURIComponent(dest);
                     elementoFumetto.innerHTML = "📍 **Protocollo Navigazione Google Maps Attivato**, signore! Lancio dell'app ufficiale e impostazione rotta verso **" + dest + "** completata.";
-                    return;
+                    salvaStatoDatabaseChat(); return;
                 }
+
+                // Aggiorna dinamicamente il titolo della chat laterale sul database in base alla prima domanda vera
+                if (databaseChat[chatIdAttiva] && databaseChat[chatIdAttiva].titolo.startsWith("Sessione")) {
+                    let parole = testoUtente.trim().split(" ");
+                    databaseChat[chatIdAttiva].titolo = parole.slice(0, 3).join(" ") + (parole.length > 3 ? "..." : "");
+                }
+
                 elementoFumetto.innerHTML = convertiMarkdownInGrassetto(dati.risposta);
             } catch (error) {
-                elementoFumetto.innerHTML = "🤖 *Connessione wireless locale non trovata. Controlla che il telefono sia agganciato al Wi-Fi del PC portatile!*";
+                elementoFumetto.innerHTML = "🤖 *Risposta nativa Stark*: Ho ricevuto il comando su **" + testoUtente + "**. Per attivare l'intelligenza di Gemini ed i comandi hardware, avvia il file app.py su PyCharm e connetti lo smartphone allo stesso Wi-Fi!";
             }
-            zonaChat.scrollTop = zonaChat.scrollHeight;
+            salvaStatoDatabaseChat(); renderizzaListaSidebar(); zonaChat.scrollTop = zonaChat.scrollHeight;
         }
 
         function eseguiInvia(daVocale = false, testoVocale = "") {
@@ -211,7 +245,7 @@
 
         btnInvia.onclick = () => eseguiInvia(false);
         testoComandi.onkeypress = (e) => { if(e.key === 'Enter') eseguiInvia(false); };
-        cambioModulo.onchange = (e) => { moduloAttivo = e.target.value; inizializzaEcosistemaChat(); };
+        cambioModulo.onchange = (e) => { moduloAttivo = e.target.value; if(databaseChat[chatIdAttiva]) { databaseChat[chatIdAttiva].modulo = moduloAttivo; databaseChat[chatIdAttiva].titolo = moduloAttivo == "ai" ? "Sessione JARVIS AI" : "Sessione Miro Scuola"; } caricaSessioneInChat(chatIdAttiva); };
 
         const Reco = window.SpeechRecognition || window.webkitSpeechRecognition; let rec; let accumulo = "";
         if (Reco) {
