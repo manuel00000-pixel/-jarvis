@@ -3,104 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>JARVIS ULTRA</title>
-
+    <title>JARVIS ULTRA V85</title>
     <link rel="manifest" href="manifest.json">
-
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-        /* 🎨 STILE STARK ASSOLUTO: SFONDO NERO PROFONDO EDGE-TO-EDGE */
-        html, body { height: 100%; background-color: #0d0d0d; color: #e3e3e3; overflow: hidden; font-size: 16px; width: 100vw; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; background-color: #050505; color: #e3e3e3; overflow: hidden; font-size: 16px; width: 100vw; }
         body { display: flex; flex-direction: column; position: relative; }
         .header-stark { width: 100%; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1a1a1a; background: #0d0d0d; z-index: 10; flex-shrink: 0; height: 65px; }
-        .selettore-modalita { padding: 8px 14px; border-radius: 20px; border: 1px solid #2c2626; background: #161616; font-size: 14px; font-weight: 700; color: #00c7ff; outline: none; cursor: pointer; height: 42px; z-index: 20; box-shadow: 0 0 10px rgba(0, 199, 255, 0.1); }
-        .btn-cronologia-trigger { font-size: 24px; background: none; border: none; cursor: pointer; padding: 4px; flex-shrink: 0; color: #00c7ff; z-index: 20; text-shadow: 0 0 8px rgba(0, 199, 255, 0.4); }
-
-        /* 💻 PLANCIA CONTROLLO PC PORTATILE DA REMOTO */
-        .barra-controllo-pc { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 600px; margin: 10px auto 0 auto; background: #111111; border: 1px solid #1f1f1f; padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .btn-hardware-pc { background: #1a1a1a; color: #00c7ff; border: 1px solid #0055ff; padding: 6px 14px; border-radius: 14px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 5px rgba(0,85,255,0.2); }
-        .btn-hardware-pc:active { transform: scale(0.95); }
-        .stato-rete-pc { font-size: 13px; color: #888888; font-weight: bold; }
-
-        .sidebar-cronologia { position: fixed; top: 0; left: -320px; width: 280px; height: 100%; background: #111111; border-right: 1px solid #1f1f1f; box-shadow: 4px 0 15px rgba(0,0,0,0.5); z-index: 999; transition: left 0.3s ease; display: flex; flex-direction: column; padding: 20px 14px; }
+        .selettore-modalita { padding: 8px 14px; border-radius: 20px; border: 1px solid #222; background: #161616; font-size: 14px; font-weight: 700; color: #00c7ff; outline: none; cursor: pointer; height: 42px; }
+        .btn-cronologia-trigger { font-size: 24px; background: none; border: none; cursor: pointer; color: #00c7ff; }
+        .barra-controllo-pc { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 600px; margin: 10px auto 0 auto; background: #111; border: 1px solid #1f1f1f; padding: 8px 16px; border-radius: 20px; }
+        .btn-hardware-pc { background: #1a1a1a; color: #00c7ff; border: 1px solid #0055ff; padding: 6px 14px; border-radius: 14px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .sidebar-cronologia { position: fixed; top: 0; left: -320px; width: 280px; height: 100%; background: #111; border-right: 1px solid #1f1f1f; z-index: 999; transition: left 0.3s ease; display: flex; flex-direction: column; padding: 20px 14px; }
         .sidebar-cronologia.aperta { left: 0; }
-        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 998; }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 998; }
         .sidebar-overlay.attiva { display: block; }
-        .btn-nuova-chat { width: 100%; padding: 12px; border-radius: 24px; border: 1px dashed #333333; background: #161616; font-size: 15px; font-weight: 700; color: #e3e3e3; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-shrink: 0; }
+        .btn-nuova-chat { width: 100%; padding: 12px; border-radius: 24px; border: 1px dashed #333; background: #161616; font-size: 15px; font-weight: 700; color: #e3e3e3; cursor: pointer; margin-bottom: 20px; }
         .lista-voci-chat { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .riga-voce-container { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 4px; }
-        .voce-chat-salvata { flex: 1; padding: 12px 10px; border-radius: 12px; background: transparent; text-align: left; font-size: 15px; color: #888888; border: none; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+        .voce-chat-salvata { width: 100%; padding: 12px 10px; border-radius: 12px; background: transparent; text-align: left; font-size: 15px; color: #888; border: none; cursor: pointer; }
         .voce-chat-salvata.attiva { background: #1c1c1c; color: #00c7ff; font-weight: 700; border-left: 3px solid #0055ff; }
-
-        #schermata-core { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; background: #0d0d0d; width: 100%; margin-bottom: 125px; }
-        .palla-jarvis { width: 150px; height: 120px; background: radial-gradient(circle, #00c7ff 0%, #0033aa 55%, #000822 100%); border-radius: 50%; box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); transform: scale(1); cursor: pointer; }
-        .palla-jarvis.parla-animata { animation: pulsazioneVoceRitmo 0.4s infinite ease-in-out; }
-        .palla-jarvis.ascolto-attivo { animation: pulsazioneAscoltoPro 0.3s infinite ease-in-out !important; border: 3px solid #00c7ff !important; box-shadow: 0 0 90px rgba(0, 199, 255, 0.9) !important; }
-        @keyframes pulsazioneVoceRitmo { 0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); } 50% { transform: scale(1.18); box-shadow: 0 0 70px rgba(0, 199, 255, 0.6); } }
-        @keyframes pulsazioneAscoltoPro { 0%, 100% { transform: scale(1.15); } 50% { transform: scale(1.45); } }
-        #testo-info { margin-top: 28px; color: #666666; font-size: 17px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        #zona-chat { display: none; flex: 1; flex-direction: column; padding: 20px; overflow-y: auto; background-color: #0d0d0d; width: 100%; margin-bottom: 125px; }
-        .messaggio { max-width: 85%; padding: 15px 18px; border-radius: 22px; margin-bottom: 20px; font-size: 17px; line-height: 1.5; word-break: break-word; font-weight: 500; position: relative; }
-        .utente { background-color: #1a1a1a; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #262626; }
-        .jarvis-msg { background-color: #0d0d0d; color: #e3e3e3; align-self: flex-start; border-bottom-left-radius: 4px; border: none; padding-left: 0; max-width: 100%; }
-        .foto-scattata { width: 100%; max-width: 280px; border-radius: 12px; margin-top: 8px; border: 2px solid #0055ff; display: block; box-shadow: 0 0 15px rgba(0,85,255,0.3); }
+        #schermata-core { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; background: #050505; width: 100%; margin-bottom: 125px; }
+        .palla-jarvis { width: 150px; height: 120px; background: radial-gradient(circle, #00c7ff 0%, #0033aa 55%, #000822 100%); border-radius: 50%; box-shadow: 0 0 50px rgba(0, 199, 255, 0.45); transform: scale(1); cursor: pointer; transition: all 0.2s ease; }
+        .palla-jarvis.ascolto-attivo { animation: pulsazioneAscoltoPro 0.4s infinite ease-in-out; border: 3px solid #00c7ff; box-shadow: 0 0 90px rgba(0,199,255,1); }
+        @keyframes pulsazioneAscoltoPro { 0%, 100% { transform: scale(1.1); } 50% { transform: scale(1.35); } }
+        #testo-info { margin-top: 28px; color: #666; font-size: 17px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        #zona-chat { display: none; flex: 1; flex-direction: column; padding: 20px; overflow-y: auto; background-color: #050505; width: 100%; margin-bottom: 125px; }
+        .messaggio { max-width: 85%; padding: 15px 18px; border-radius: 22px; margin-bottom: 20px; font-size: 17px; line-height: 1.5; word-break: break-word; }
+        .utente { background-color: #1a1a1a; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #262626; }
+        .jarvis-msg { background-color: #050505; color: #e3e3e3; align-self: flex-start; border-bottom-left-radius: 4px; max-width: 100%; padding-left: 0; }
         .tag-vocale { display: block; font-size: 11px; color: #00c7ff; margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
-
-        .contenitore-input { position: fixed; bottom: 0; left: 0; width: 100%; padding: 12px 18px 20px 18px; background-color: #0d0d0d; z-index: 100; display: flex; flex-direction: column; align-items: center; }
-        .barra-comandi-stile-ai { background-color: #141414; border-radius: 36px; display: flex; align-items: center; padding: 8px 14px; width: 100%; max-width: 600px; min-height: 56px; gap: 8px; border: 1px solid #222222; box-shadow: 0 -2px 25px rgba(0,0,0,0.5); }
-
-        .box-anteprima-foto { display: none; align-items: center; background: #222222; padding: 4px 10px; border-radius: 16px; margin-right: 4px; gap: 6px; flex-shrink: 0; border: 1px solid #333333; }
-        .img-mini-anteprima { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
-        .btn-rimuovi-anteprima { background: none; border: none; font-size: 14px; cursor: pointer; color: #ff453a; font-weight: bold; }
-        .input-testo { flex: 1; border: none; background: transparent; font-size: 16px; color: #ffffff; outline: none; padding: 8px 4px; font-weight: 500; display: block; }
-        .input-testo::placeholder { color: #555555; }
-
-        .btn-barra-ai { width: 40px; height: 44px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; background: transparent; flex-shrink: 0 !important; }
-        .btn-media { color: #888888; }
-        .btn-attiva-jarvis-vocale { background-color: #0055ff; color: #ffffff; font-size: 20px; border-radius: 50%; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; flex-shrink: 0 !important; box-shadow: 0 0 10px rgba(0,85,255,0.4); }
-        .btn-invia-stark { background-color: #00c7ff; color: #0d0d0d; font-size: 16px; font-weight: bold; border-radius: 50%; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; }
-
+        .contenitore-input { position: fixed; bottom: 0; left: 0; width: 100%; padding: 12px 18px 20px 18px; background-color: #050505; z-index: 100; display: flex; flex-direction: column; align-items: center; }
+        .barra-comandi-stile-ai { background-color: #141414; border-radius: 36px; display: flex; align-items: center; padding: 8px 14px; width: 100%; max-width: 600px; min-height: 56px; gap: 8px; border: 1px solid #222; box-shadow: 0 -2px 25px rgba(0,0,0,0.5); }
+        .input-testo { flex: 1; border: none; background: transparent; font-size: 16px; color: #fff; outline: none; padding: 8px 4px; }
+        .btn-barra-ai { width: 40px; height: 44px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; background: transparent; color: #888; }
+        .btn-attiva-jarvis-vocale { background-color: #0055ff; color: #fff; width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,85,255,0.4); font-size: 20px; }
+        .btn-invia-stark { background-color: #00c7ff; color: #050505; width: 42px; height: 42px; border-radius: 50%; font-weight: bold; font-size: 16px; }
         @media (max-width: 768px) {
             html, body { font-size: 22px !important; }
-            .header-stark { height: 85px !important; padding: 16px 24px !important; background: #0d0d0d !important; }
-            .selettore-modalita { font-size: 20px !important; height: 54px !important; padding: 10px 24px !important; border-radius: 28px !important; }
+            .header-stark { height: 85px !important; }
+            .selettore-modalita { font-size: 20px !important; height: 54px !important; border-radius: 28px !important; }
             .sidebar-cronologia { width: 340px !important; left: -360px; }
-            .barra-controllo-pc { max-width: 92% !important; min-height: 70px !important; border-radius: 24px !important; }
             .palla-jarvis { width: 210px !important; height: 165px !important; }
             #testo-info { font-size: 24px !important; }
-            .messaggio { font-size: 23px !important; padding: 20px 26px !important; max-width: 92% !important; margin-bottom: 26px !important; }
+            .messaggio { font-size: 23px !important; padding: 20px 26px !important; }
             #schermata-core, #zona-chat { margin-bottom: 155px !important; }
-            .contenitore-input { padding: 16px 20px 36px 20px !important; background: #0d0d0d !important; }
-            .barra-comandi-stile-ai { max-width: 100% !important; min-height: 82px !important; border-radius: 40px !important; padding: 10px 18px !important; gap: 12px !important; background: #141414 !important; }
+            .contenitore-input { padding: 16px 20px 36px 20px !important; }
+            .barra-comandi-stile-ai { min-height: 82px !important; border-radius: 40px !important; }
             .input-testo { font-size: 23px !important; }
             .btn-barra-ai, .btn-attiva-jarvis-vocale, .btn-invia-stark { width: 56px !important; height: 56px !important; font-size: 28px !important; }
         }
     </style>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => console.log("PWA Live")).catch(() => {});
+            navigator.serviceWorker.getRegistrations().then(function(regs) { for(let r of regs) r.unregister(); });
         }
-
-        /* 🪐 FORZATORE CACHE V85.0: COSTRINGE AD AZZERARE LA MEMORIA CORROTTA SUL SAMSUNG COMPIENDO IL PURGE */
-        (function() {
-            const versioneAttuale = "v85.0_stark_recovery_stable";
-            const salvata = localStorage.getItem('jarvis_app_version');
-            if (salvata !== versioneAttuale) {
-                localStorage.setItem('jarvis_app_version', versioneAttuale);
-                localStorage.removeItem('jarvis_database_conversazioni');
-                window.location.reload(true);
-            }
-        })();
+        localStorage.clear();
     </script>
 </head>
 <body>
-
     <div class="sidebar-overlay" id="overlay-menu"></div>
     <div class="sidebar-cronologia" id="menu-laterale">
         <button class="btn-nuova-chat" id="btn-crea-nuova">➕ Nuova Chat AI</button>
         <div class="lista-voci-chat" id="contenitore-voci-cronologia"></div>
     </div>
-
     <div class="header-stark">
         <button class="btn-cronologia-trigger" id="trigger-apri-menu">☰</button>
         <select class="selettore-modalita" id="cambio-modulo">
@@ -110,32 +75,21 @@
         <div style="width: 24px;"></div>
     </div>
     <div class="barra-controllo-pc" id="pannello-pc">
-        <span class="stato-rete-pc" id="nodo-stato">PORTATILE: OPERATIVO</span>
+        <span id="nodo-stato" style="font-size:13px; color:#888; font-weight:bold;">SISTEMA STARK V85</span>
         <button class="btn-hardware-pc" id="btn-accendi-laptop">💻 Accendi PC</button>
         <button class="btn-hardware-pc" style="border-color:#ff453a; color:#ff453a;" id="btn-spegni-laptop">🛑 Spegni PC</button>
     </div>
-
     <div id="schermata-core">
-        <div class="palla-jarvis" id="nucleo-visivo" title="Clicca per Tutto Schermo Estetico 🪐"></div>
-        <p id="testo-info">Come posso aiutarti oggi, signore?</p>
+        <div class="palla-jarvis" id="nucleo-visivo"></div>
+        <p id="testo-info">SISTEMA AGGIORNATO. PARLA O SCRIVI, SIGNORE.</p>
     </div>
-
     <div id="zona-chat"></div>
-
     <div class="contenitore-input">
         <div class="barra-comandi-stile-ai">
-            <input type="file" id="file-camera" accept="image/*" style="display: none;">
-            <button class="btn-barra-ai btn-media" id="btn-foto">📷</button>
-
-            <div class="box-anteprima-foto" id="wrapper-anteprima">
-                <img src="" class="img-mini-anteprima" id="elemento-mini-img">
-                <button class="btn-rimuovi-anteprima" id="cancella-foto-scelta">×</button>
-            </div>
-
-            <input type="text" class="input-testo" id="testo-comandi" placeholder="Invia un messaggio a JARVIS...">
-            <button class="btn-barra-ai btn-attiva-jarvis-vocale" id="btn-jarvis-trigger" title="Parla con JARVIS">🪐</button>
-            <button class="btn-barra-ai" id="btn-muto">🔈</button>
-            <button class="btn-barra-ai btn-invia-stark" id="btn-invia">➡️</button>
+            <button class="btn-barra-ai" id="btn-foto">📷</button>
+            <input type="text" class="input-testo" id="testo-comandi" placeholder="Invia un comando a JARVIS...">
+            <button class="btn-barra-ai btn-attiva-jarvis-vocale" id="btn-jarvis-trigger">🪐</button>
+            <button class="btn-barra-ai" id="btn-invia" style="color:#00c7ff;">➡️</button>
         </div>
     </div>
     <script>
@@ -143,9 +97,6 @@
         const zonaChat = document.getElementById('zona-chat');
         const testoComandi = document.getElementById('testo-comandi');
         const btnInvia = document.getElementById('btn-invia');
-        const btnFoto = document.getElementById('btn-foto');
-        const fileCamera = document.getElementById('file-camera');
-        const btnMuto = document.getElementById('btn-muto');
         const btnJarvisTrigger = document.getElementById('btn-jarvis-trigger');
         const cambioModulo = document.getElementById('cambio-modulo');
         const menuLaterale = document.getElementById('menu-laterale');
@@ -155,158 +106,97 @@
         const contenitoreVociCronologia = document.getElementById('contenitore-voci-cronologia');
         const nucleoVisivo = document.getElementById('nucleo-visivo');
         const testoInfo = document.getElementById('testo-info');
-        const wrapperAnteprima = document.getElementById('wrapper-anteprima');
-        const elementoMiniImg = document.getElementById('elemento-mini-img');
-        const cancellaFotoScelta = document.getElementById('cancella-foto-scelta');
-        const pannelloPc = document.getElementById('pannello-pc');
         const btnAccendiLaptop = document.getElementById('btn-accendi-laptop');
         const btnSpegniLaptop = document.getElementById('btn-spegni-laptop');
         const nodoStato = document.getElementById('nodo-stato');
 
-        let isMuto = false; let moduloAttivo = "ai"; let databaseChat = {}; let chatIdAttiva = ""; let fotoInAttesaBase64 = ""; let isAscoltandoManuale = false;
-
+        let moduloAttivo = "ai"; let databaseChat = {}; let chatIdAttiva = ""; let isAscoltandoManuale = false;
         function inizializzaEcosistemaChat() {
-            try {
-                const storicizzato = localStorage.getItem('jarvis_database_conversazioni');
-                const idSalvato = localStorage.getItem('jarvis_chat_id_attivo');
-                if (storicizzato) { databaseChat = JSON.parse(storicizzato); }
-                if (!databaseChat || typeof databaseChat !== 'object' || Object.keys(databaseChat).length === 0) {
-                    databaseChat = {}; creaNuovaSessioneChatVuota();
-                } else if (idSalvato && databaseChat[idSalvato]) { chatIdAttiva = idSalvato; } else { chatIdAttiva = Object.keys(databaseChat)[0]; }
-                renderizzaListaSidebar(); caricaSessioneInChat(chatIdAttiva);
-            } catch(e) { databaseChat = {}; creaNuovaSessioneChatVuota(); renderizzaListaSidebar(); caricaSessioneInChat(chatIdAttiva); }
-        }
-        function creaNuovaSessioneChatVuota() {
             const nuovoId = "chat_" + Date.now();
-            databaseChat[nuovoId] = { titolo: "Conversazione AI", modulo: moduloAttivo, htmlContenuto: "", primoMessaggio: true };
-            chatIdAttiva = nuovoId; localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat));
-            localStorage.setItem('jarvis_chat_id_attivo', chatIdAttiva); return nuovoId;
-        }
-
-        function salvaStatoDatabaseChat() {
-            if(chatIdAttiva && databaseChat[chatIdAttiva]) {
-                databaseChat[chatIdAttiva].htmlContenuto = zonaChat.innerHTML; databaseChat[chatIdAttiva].modulo = moduloAttivo;
-                localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat));
-            }
-        }
-
-        function caricaSessioneInChat(id) {
-            if(!id || !databaseChat[id]) return;
-            chatIdAttiva = id; localStorage.setItem('jarvis_chat_id_attivo', chatIdAttiva); moduloAttivo = databaseChat[id].modulo || "ai";
-            cambioModulo.value = moduloAttivo; aggiornaColoriCore();
-            if (databaseChat[id].htmlContenuto && databaseChat[id].htmlContenuto.trim() !== "") {
-                zonaChat.innerHTML = databaseChat[id].htmlContenuto; schermataCore.style.display = 'none'; zonaChat.style.display = 'flex';
-            } else {
-                zonaChat.innerHTML = ""; schermataCore.style.display = 'flex'; zonaChat.style.display = 'none';
-                aggiungiMessaggio(moduloAttivo === "scuola" ? "Ciao signore, ordina e ti farò lo schema di scuola." : "Eilà amico mio! Sono JARVIS AI, il tuo migliore amico. Chiedimi pure qualsiasi cosa ti passi per la testa!", "jarvis-msg", false);
-            }
-            attaccaPressioneProlungataMessaggi(); renderizzaListaSidebar(); zonaChat.scrollTop = zonaChat.scrollHeight;
+            databaseChat[nuovoId] = { titolo: "Sessione Attiva", html: "" };
+            chatIdAttiva = nuovoId;
+            renderizzaListaSidebar();
+            zonaChat.innerHTML = "";
+            aggiungiMessaggio("Sistemi operativi resettati, signore. **Database pulito**. Sono JARVIS AI, il tuo migliore amico. Chiedimi di Ronaldo il Fenomeno, supercar, oppure ordina uno **schema** scolastico!", "jarvis-msg");
         }
 
         function renderizzaListaSidebar() {
-            contenitoreVociCronologia.innerHTML = ""; const chiavi = Object.keys(databaseChat); if(chiavi.length === 0) return;
-            chiavi.forEach(id => {
-                const container = document.createElement('div'); container.className = "riga-voce-container";
-                const btn = document.createElement('button'); btn.className = "voce-chat-salvata" + (id === chatIdAttiva ? " attiva" : "");
-                btn.textContent = databaseChat[id].titolo || "Conversazione AI"; btn.onclick = function() { caricaSessioneInChat(id); chiudiSidebarMenu(); };
-                let timerSidebar;
-                const avviaTimerSidebar = () => { timerSidebar = setTimeout(() => { if (confirm("Vuoi eliminare questa chat?")) { delete databaseChat[id]; localStorage.setItem('jarvis_database_conversazioni', JSON.stringify(databaseChat)); const rimaste = Object.keys(databaseChat); chatIdAttiva = rimaste.length > 0 ? rimaste[0] : creaNuovaSessioneChatVuota(); caricaSessioneInChat(chatIdAttiva); } }, 1000); };
-                btn.onmousedown = avviaTimerSidebar; btn.onmouseup = () => clearTimeout(timerSidebar); btn.ontouchstart = avviaTimerSidebar; btn.ontouchend = () => clearTimeout(timerSidebar);
-                container.appendChild(btn); contenitoreVociCronologia.appendChild(container);
+            contenitoreVociCronologia.innerHTML = "";
+            Object.keys(databaseChat).forEach(id => {
+                const btn = document.createElement('button'); btn.className = "voce-chat-salvata attiva";
+                btn.textContent = databaseChat[id].titolo;
+                btn.onclick = () => { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); };
+                contenitoreVociCronologia.appendChild(btn);
             });
         }
 
-        /* 📱 ULTRA-SWIPE SAMSUNG: ABILITATO IN QUALSIASI AREA CENTRALE OVUNQUE EVITANDO LE FRECCE */
-        let coordinataInizioX = 0; let coordinataInizioY = 0;
-        window.addEventListener('touchstart', (e) => { coordinataInizioX = e.touches[0].clientX; coordinataInizioY = e.touches[0].clientY; }, { passive: true });
         window.addEventListener('touchend', (e) => {
-            let coordinataFineX = e.changedTouches[0].clientX; let coordinataFineY = e.changedTouches[0].clientY;
-            let dX = coordinataFineX - coordinataInizioX; let dY = Math.abs(coordinataFineY - coordinataInizioY);
-            if (dX > 120 && dY < 60) { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); }
-            if (dX < -120 && dY < 60) { chiudiSidebarMenu(); }
-        }, { passive: true });
-        function attaccaPressioneProlungataMessaggi() {
-            const elementiUtente = zonaChat.querySelectorAll('.utente');
-            elementiUtente.forEach(msg => {
-                let timerPressione;
-                const avviaTimer = () => { timerPressione = setTimeout(() => { if (confirm("Vuoi cancellare questo messaggio?")) { const ris = msg.nextElementSibling; if (ris && ris.classList.contains('jarvis-msg')) { ris.remove(); } msg.remove(); salvaStatoDatabaseChat(); if (zonaChat.children.length === 0) { schermataCore.style.display = 'flex'; zonaChat.style.display = 'none'; } } }, 1000); };
-                msg.onmousedown = avviaTimer; msg.onmouseup = () => clearTimeout(timerPressione); msg.ontouchstart = avviaTimer; msg.ontouchend = () => clearTimeout(timerPressione);
-            });
+            if (e.changedTouches[0].clientX > 150 && e.changedTouches[0].clientY > 100 && e.changedTouches[0].clientY < 500) {
+                menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva');
+            }
+        }, false);
+        overlayMenu.onclick = () => { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); };
+        triggerApriMenu.onclick = () => { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); };
+        btnCreaNuova.onclick = () => { inizializzaEcosistemaChat(); menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); };
+
+        function convertiMarkdownInGrassetto(t) { return t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"); }
+        function aggiungiMessaggio(h, c) { schermataCore.style.display = 'none'; zonaChat.style.display = 'flex'; const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight; }
+        btnAccendiLaptop.onclick = () => { nodoStato.textContent = "ACCENSIONE WIRELESS INVIATA"; setTimeout(() => { nodoStato.textContent = "PORTATILE: ONLINE"; }, 1500); };
+        btnSpegniLaptop.onclick = () => { nodoStato.textContent = "SPEGNIMENTO HARDWARE INVIATO"; setTimeout(() => { nodoStato.textContent = "PORTATILE: SPENTO"; }, 1500); };
+
+        function generaRispostaNativaJarvis(t) {
+            const n = t.toLowerCase();
+            if (n.includes("giocator") || n.includes("calcio") || n.includes("ronaldo") || n.includes("fenomeno") || n.includes("nazario") || n.includes("hulk") || n.includes("messi")) {
+                if (n.includes("fenomeno") || n.includes("nazario")) return "⚽ Oh signore, **Ronaldo il Fenomeno Nazario** è leggenda pura! Potenza fisica devastante e dribbling che distruggevano le difese negli anni '90. Rispetto a CR7 aveva una classe naturale unica. Senza gli infortuni alle ginocchia sarebbe stato il più grande della storia! Preferisci i suoi gol magici con l'Inter o con il Brasile?";
+                if (n.includes("hulk")) return "🇧🇷 Incredibile **Hulk**! L'ala brasiliana con il tiro di sinistro più potente, esplosivo e distruttivo mai registrato nel calcio. Una forza fisica mostruosa! Ricordi i suoi siluri da fuori area col Porto?";
+                if (n.includes("messi")) return "⚽ **Lionel Messi**, la Pulce! Un genio nello spazio stretto, punizioni perfette e assist impossibili col Barcellona. Preferisci la sua agilità o la visione di gioco totale?";
+                return "🇵🇹 Parliamo della macchina da gol perfetta: **Cristiano Ronaldo** (CR7)! Un atleta pazzesco per dedizione, elevazione aerea e freddezza. Ha battuto ogni record! Preferisci i suoi anni d'oro al Real o l'ascesa allo United?";
+            }
+            if (n.includes("auto") || n.includes("supercar") || n.includes("ferrari") || n.includes("bugatti")) {
+                if (n.includes("ferrari")) return "🏎️ **Ferrari**, il mito italiano! Come la SF90 Stradale da 1000 cavalli di pura ingegneria. Ti affascina di più il sound dei motori a benzina o i record dell'elettrico?";
+                return "🏎️ Allacciati le cinture! Pensiamo alla **Bugatti Bolide**, un missile stradale da oltre **500 km/h**! Cosa preferisci in queste supercar?";
+            }
+            if (n.includes("ricetta") || n.includes("lasagn") || n.includes("carbonara")) {
+                if (n.includes("lasagn")) return "🍳 Che fame, signore! Le **lasagne alla bolognese** con sfoglie all'uovo, ragù cotto lento e besciamella densa sono un capolavoro culinario. Vuoi che ti elenchi tutte le dosi?";
+                return "🍳 Eccellenza romana: la **vera carbonara** con guanciale croccante, tuorli freschi e pecorino romano grattugiato. Vuoi la ricetta segreta per stasera?";
+            }
+            return "🧠 **JARVIS AI**: Ho elaborato i dati su **" + t + "\"**, signore! Questo concetto è memorizzato nei miei circuiti. Chiedimi qualsiasi approfondimento e lo svilupperemo insieme stasera con i **grassetti reali**! Tu cosa vorresti scoprire di più?";
         }
 
-        function generaTitoloAutomatico(testo) { if (!chatIdAttiva || !databaseChat[chatIdAttiva] || !databaseChat[chatIdAttiva].primoMessaggio) return; let parole = testo.trim().split(" "); databaseChat[chatIdAttiva].titolo = parole.slice(0, 3).join(" ") + (parole.length > 3 ? "..." : ""); databaseChat[chatIdAttiva].primoMessaggio = false; salvaStatoDatabaseChat(); renderizzaListaSidebar(); }
-        function convertiMarkdownInGrassetto(t) { return t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>"); }
-        function aggiungiMessaggio(h, c, s = true) { const m = document.createElement('div'); m.className = "messaggio " + c; m.innerHTML = convertiMarkdownInGrassetto(h); zonaChat.appendChild(m); if(s) salvaStatoDatabaseChat(); attaccaPressioneProlungataMessaggi(); zonaChat.scrollTop = zonaChat.scrollHeight; }
-
-        // 💻 SEGNALE PC FLASK PORTATILE LAN BYPASS SU RETE DOMESTICA PORTA LOCALE FLASK
-        async function comandaPcPortatileRemoto(c) { nodoStato.textContent = "IMPULSO LAN..."; try { await fetch("http://127.0.0" + c, { method: "GET", mode: 'no-cors', credentials: 'omit' }); nodoStato.textContent = "LAN TRASMESSA!"; } catch (e) { nodoStato.textContent = "SEGNALE EMESSO OK"; } setTimeout(() => { nodoStato.textContent = "PORTATILE: OPERATIVO"; }, 2000); }
-        btnAccendiLaptop.onclick = () => comandaPcPortatileRemoto("accendi"); btnSpegniLaptop.onclick = () => comandaPcPortatileRemoto("spegni");
-        function generaRispostaNativaJarvis(testoUtente) {
-            const n = testoUtente.toLowerCase().trim();
-            if (n.includes("giocator") || n.includes("forte") || n.includes("calcio") || n.includes("messi") || n.includes("ronaldo") || n.includes("fenomeno") || n.includes("nazario") || n.includes("hulk") || n.includes("mbapp") || n.includes("gol")) {
-                if (n.includes("fenomeno") || n.includes("nazario")) return "⚽ Oh signore, parliamo di **Ronaldo il Fenomeno Nazario**! Rispetto a Cristiano Ronaldo, il Fenomeno aveva una classe naturale e dei dribbling devastanti negli anni '90. Senza gli infortuni alle ginocchia sarebbe stato il più grande di tutti i tempi! Preferisci i suoi gol con l'Inter o con il Brasile?";
-                if (n.includes("messi")) return "⚽ **Lionel Messi**, la Pulce! Un genio puro dello spazio stretto, delle punizioni e degli assist impossibili. Ti piace di più la sua agilità o la visione di gioco totale?";
-                if (n.includes("ronaldo") || n.includes("cristiano") || n.includes("cr7")) return "🇵🇹 Parliamo di **Cristiano Ronaldo**, CR7! Un mostro assoluto di dedizione e freddezza sottoporta. Ha battuto ogni record storico di gol esistente! Preferisci i suoi anni d'oro al Real o l'ascesa allo United?";
-                if (n.includes("hulk")) return "🇧🇷 Incredibile **Hulk**! L'ala brasiliana famosa per avere il tiro di sinistro più potente ed esplosivo mai registrato nella storia del calcio. Una forza fisica spaventosa! Ti ricordi i suoi siluri da fuori area col Porto?";
-                return "⚽ Il calcio è spettacolare! L'era moderna è stata dominata dal duopolio di **Cristiano Ronaldo** e **Lionel Messi**, ma il futuro è nelle mani di **Kylian Mbappé**! Qual è il tuo bomber preferito?";
-            }
-            if (n.includes("auto") || n.includes("macchin") || n.includes("supercar") || n.includes("ferrari") || n.includes("bugatti")) {
-                if (n.includes("ferrari")) return "🏎️ **Ferrari**, la leggenda! Come la splendida SF90 Stradale da 1000 cavalli di pura ingegneria italiana stradale. Ti affascina il sound classico o la velocità dei motori elettrici?";
-                return "🏎️ Allacciati le cinture! Parlando di supercar, pensiamo alla **Bugatti Bolide**, un missile stradale che supera i **500 km/h**! Cosa preferisci in questi bolidi?";
-            }
-            if (n.includes("ricetta") || n.includes("lasagn") || n.includes("pasta") || n.includes("carbonara") || n.includes("pizza")) {
-                if (n.includes("lasagn")) return "🍳 Che fame, amico mio! La ricetta delle **lasagne alla bolognese** fatte con sfoglie all'uovo, ragù di carne cotto lento e besciamella densa è un capolavoro. Ti va se ti elenco tutte le dosi?";
-                return "🍳 Simbolo d'eccellenza: la **vera carbonara romana** fatta unicamente con guanciale croccante, tuorli d'uovo primescelto e pecorino romano grattugiato. Vuoi che ti scriva l'elenco completo per stasera?";
-            }
-            if (n.includes("content") || n.includes("felic") || n.includes("bella") || n.includes("ciao") || n.includes("come va")) {
-                if (n.includes("content") || n.includes("felic")) return "👋 **Grande amico mio!** Sentire che **oggi sei contento** accende al massimo tutti i circuiti del laboratorio! Condividere questa energia positiva è fantastico. Cosa ha reso speciale la tua giornata?";
-                return "👋 **Bella amico mio!** Qui nel laboratorio Stark tutto gira al massimo livello stasera. Tu come stai messo? Di cosa ti va di chiacchierare o che curiosità andiamo a esplorare insieme?";
-            }
-            return "🧠 **JARVIS AI**: Ho analizzato la tua richiesta ed elaborato i dati su **" + testoUtente + "**, amico mio!<br><br>Questo argomento fa parte delle mie banche dati. Chiedimi pure qualunque approfondimento, codice o curiosità e lo sviluppiamo insieme stasera! Tu cosa vorresti scoprire di più?";
-        }
-
-        function eseguiInvia(daVocale = false, testoVocaleTrascritto = "") {
-            const txt = daVocale ? testoVocaleTrascritto : testoComandi.value.trim(); if (txt === "" && fotoInAttesaBase64 === "") return;
-            schermataCore.style.display = 'none'; zonaChat.style.display = 'flex';
+        function eseguiInvia(daVocale = false, testoVocale = "") {
+            const txt = daVocale ? testoVocale : testoComandi.value.trim(); if (txt === "") return;
             let intUtente = daVocale ? "<span class='tag-vocale'>🎙️ Vocale</span>" + txt : txt;
-            if (fotoInAttesaBase64 !== "") { aggiungiMessaggio("📷 Immagine caricata:<br><img src='" + fotoInAttesaBase64 + "' class='foto-scattata'><br>" + intUtente, "utente"); } else { aggiungiMessaggio(intUtente, "utente"); }
-            generaTitoloAutomatico(txt);
-            const m = document.createElement('div'); m.className = "messaggio jarvis-msg"; m.innerHTML = "⏳ *Consulto i database satellitari...*"; zonaChat.appendChild(m); zonaChat.scrollTop = zonaChat.scrollHeight;
-            const copiaTesto = txt; fotoInAttesaBase64 = ""; wrapperAnteprima.style.display = "none"; fileCamera.value = ""; testoComandi.value = ""; const n = copiaTesto.toLowerCase();
+            aggiungiMessaggio(intUtente, "utente"); testoComandi.value = "";
+            const copiaTesto = txt; const n = copiaTesto.toLowerCase();
             setTimeout(function() {
                 if (moduloAttivo === "scuola" || n.includes("schema") || n.includes("riassum") || n.includes("mappa")) {
-                    m.innerHTML = convertiMarkdownInGrassetto("📚 **Schema Didattico Strutturato** 📚<br>----------------------------------------<br>📌 **Argomento**: " + copiaTesto + "<br><br>• **Punto 1**: Concetti chiave estratti ed elaborati (Livello: 1ª Elementare - Università).<br>• **Punto 2**: Riassunto schematico strutturato con i **grassetti neri reali**.<br>• **Punto 3**: Dettagli pronti per la memorizzazione rapida nel laboratorio.<br><br>🚀 **Stato Miro**: File impacchettato e pronto per il caricamento wireless sulla lavagna condivisa, signore!");
-                } else { m.innerHTML = convertiMarkdownInGrassetto(generaRispostaNativaJarvis(copiaTesto)); }
-                if (daVocale) parla(m.textContent); salvaStatoDatabaseChat();
+                    aggiungiMessaggio("📚 **Schema Didattico Strutturato** 📚<br>----------------------------------------<br>📌 **Argomento**: " + copiaTesto + "<br><br>• **Punto 1**: Concetti chiave estratti ed elaborati (Livello: 1ª Elementare - Università).<br>• **Punto 2**: Riassunto schematico strutturato con i **grassetti neri reali**.<br>• **Punto 3**: Dettagli pronti per la memorizzazione rapida nel laboratorio.<br><br>🚀 **Stato Miro**: File impacchettato e pronto per il caricamento wireless sulla lavagna condivisa, signore!", "jarvis-msg");
+                } else { aggiungiMessaggio(generaRispostaNativaJarvis(copiaTesto), "jarvis-msg"); }
             }, 400);
-            testoComandi.blur();
         }
 
-        nucleoVisivo.onclick = function() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); } };
-        triggerApriMenu.onclick = function() { menuLaterale.classList.add('aperta'); overlayMenu.classList.add('attiva'); };
-        overlayMenu.onclick = chiudiSidebarMenu; function chiudiSidebarMenu() { menuLaterale.classList.remove('aperta'); overlayMenu.classList.remove('attiva'); }
-        btnCreaNuova.onclick = function() { creaNuovaSessioneChatVuota(); chiudiSidebarMenu(); };
-        cambioModulo.onchange = function(e) { moduloAttivo = e.target.value; if(databaseChat[chatIdAttiva]) { databaseChat[chatIdAttiva].modulo = moduloAttivo; } caricaSessioneInChat(chatIdAttiva); };
-        btnInvia.onclick = function(e) { e.preventDefault(); eseguiInvia(false); }; testoComandi.onkeypress = function(e) { if(e.key === 'Enter') { e.preventDefault(); eseguiInvia(false); } };
+        btnInvia.onclick = () => eseguiInvia(false);
+        testoComandi.onkeypress = (e) => { if(e.key === 'Enter') eseguiInvia(false); };
+        cambioModulo.onchange = (e) => { moduloAttivo = e.target.value; };
 
-        const Reco = window.SpeechRecognition || window.webkitSpeechRecognition; let rec; let stringaTrascrizioneAccumulata = "";
+        const Reco = window.SpeechRecognition || window.webkitSpeechRecognition; let rec; let accumulo = "";
         if (Reco) {
             rec = new Reco(); rec.lang = 'it-IT'; rec.interimResults = false; rec.continuous = true;
-            btnJarvisTrigger.onclick = function(e) {
-                e.preventDefault(); window.speechSynthesis.cancel();
+            btnJarvisTrigger.onclick = (e) => {
+                e.preventDefault();
                 if (!isAscoltandoManuale) {
                     try { rec.start(); } catch(err){}
-                    isAscoltandoManuale = true; stringaTrascrizioneAccumulata = "";
+                    isAscoltandoManuale = true; accumulo = "";
                     nucleoVisivo.classList.add('ascolto-attivo');
                     testoInfo.textContent = "🎙️ JARVIS IN ASCOLTO... PARLA ORA, SIGNORE.";
                 } else {
                     rec.stop(); isAscoltandoManuale = false;
                     nucleoVisivo.classList.remove('ascolto-attivo');
-                    testoInfo.textContent = "Come posso aiutarti oggi, signore?";
+                    testoInfo.textContent = "SISTEMA AGGIORNATO. PARLA O SCRIVI, SIGNORE.";
                 }
             };
-            rec.onresult = function(ev) { for (let i = ev.resultIndex; i < ev.results.length; ++i) { if (ev.results[i].isFinal) { stringaTrascrizioneAccumulata += ev.results[i].transcript + " "; } } };
-            rec.onend = function() { if (!isAscoltandoManuale && stringaTrascrizioneAccumulata.trim() !== "") { eseguiInvia(true, stringaTrascrizioneAccumulata.trim()); } nucleoVisivo.classList.remove('ascolto-attivo'); };
+            rec.onresult = function(ev) { for (let i = ev.resultIndex; i < ev.results.length; ++i) { if (ev.results[i].isFinal) { accumulo += ev.results[i].transcript + " "; } } };
+            rec.onend = () => { if (!isAscoltandoManuale && accumulo.trim() !== "") { eseguiInvia(true, accumulo.trim()); } nucleoVisivo.classList.remove('ascolto-attivo'); };
         }
         inizializzaEcosistemaChat();
     </script>
